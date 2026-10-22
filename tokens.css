@@ -1,0 +1,85 @@
+/* FGSS DAT — design tokens
+   Youthful e-commerce energy, school-appropriate */
+
+:root {
+  /* School */
+  --school-green: #0A7A4F;
+  --school-green-light: #BFE3CF;
+  --school-red: #D0202E;
+  --cream: #F7F5EF;
+
+  /* Neutrals */
+  --bg: #ffffff;
+  --bg-muted: var(--cream);
+  --text: #111111;
+  --text-muted: #6b7280;
+  --border: #e5e7eb;
+
+  /* STEAM accents */
+  --accent-emerald: #009B77;
+  --accent-tangerine: #DD4124;
+  --accent-orchid: #B565A7;
+
+  /* Theme card tiles */
+  --tile-electronics: #F4A261;
+  --tile-3dprint: #FF6B9D;
+  --tile-product: #9B6BDB;
+  --tile-woodwork: #C4A484;
+  --tile-drawing: #F5D76E;
+  --tile-stem: #5DADE2;
+  --tile-mech: #6FBF73;
+  --tile-ai: #B565A7;
+
+  /* CTA (hero button — coral energy like reference) */
+  --cta: #E85A4F;
+  --cta-hover: #d0202e;
+
+  /* Radii — bold rounded cards */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  /* Shadows — soft lift, mostly flat */
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-hero: 0 8px 32px rgba(0, 0, 0, 0.12);
+
+  /* Type */
+  --font-sans: "Noto Sans TC", "Source Han Sans TC", "PingFang TC",
+    "Microsoft JhengHei", system-ui, sans-serif;
+  --fs-hero: clamp(2rem, 5vw, 3.5rem);
+  --fs-h2: clamp(1.5rem, 3vw, 2rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+
+  /* Layout */
+  --nav-h: 64px;
+  --container: 1200px;
+  --gap-grid: 1.25rem;
+}
+
+/* Utility helpers (optional) */
+.tile-electronics { background: var(--tile-electronics); }
+.tile-3dprint { background: var(--tile-3dprint); }
+.tile-product { background: var(--tile-product); }
+.tile-woodwork { background: var(--tile-woodwork); }
+.tile-drawing { background: var(--tile-drawing); }
+.tile-stem { background: var(--tile-stem); }
+.tile-mech { background: var(--tile-mech); }
+.tile-ai { background: var(--tile-ai); }
+
+.card-tile {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.btn-cta {
+  background: var(--cta);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  padding: 0.75rem 1.5rem;
+}
+.btn-cta:hover { background: var(--cta-hover); }
