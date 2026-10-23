@@ -20,15 +20,6 @@
     a { color: inherit; text-decoration: none; }
     img { display: block; max-width: 100%; height: auto; }
 
-    .announce {
-      background: var(--cta);
-      color: #fff;
-      text-align: center;
-      font-size: var(--fs-small);
-      font-weight: 700;
-      padding: 0.45rem 1rem;
-      letter-spacing: 0.02em;
-    }
 
     .nav {
       position: sticky;
@@ -282,6 +273,9 @@
     .footer-brand strong { font-weight: 800; display: block; }
     .footer-brand span { font-size: var(--fs-small); opacity: 0.9; }
     .footer-note { font-size: var(--fs-small); opacity: 0.85; }
+    .footer-note p { margin: 0.15rem 0; }
+    .footer-mail { color: #fff; text-decoration: underline; text-underline-offset: 2px; }
+    .footer-mail:hover { opacity: 0.9; }
 
     @media (max-width: 960px) {
       .grid { grid-template-columns: repeat(2, 1fr); }
@@ -307,8 +301,6 @@
   </style>
 </head>
 <body>
-  <div class="announce">★ 粉嶺官立中學｜設計與應用科技科 — 教學資源站（示範版）★</div>
-
   <header class="nav">
     <div class="nav-inner">
       <a class="brand" href="#">
@@ -324,7 +316,7 @@
         <a href="#about">關於本科</a>
         <a href="#">專題</a>
         <a href="#">活動</a>
-        <a href="#">聯絡</a>
+        <a href="#contact">聯絡</a>
       </nav>
     </div>
   </header>
@@ -362,7 +354,7 @@
           <span class="link">進入教材</span>
         </div>
       </a>
-      <a class="card" href="https://dat-fgss.github.io/production/" target="_blank" rel="noopener">
+<a class="card" href="https://dat-fgss.github.io/production/" target="_blank" rel="noopener">
         <div class="card-face tile-product">
           <img src="assets/cards/card_03.png" alt="" />
           <span class="chip">NEW</span>
@@ -373,7 +365,7 @@
           <span class="link">進入教材</span>
         </div>
       </a>
-      <a class="card" href="https://dat-fgss.github.io/color-simulator/" target="_blank" rel="noopener">
+<a class="card" href="https://dat-fgss.github.io/color-simulator/" target="_blank" rel="noopener">
         <div class="card-face tile-stem">
           <img src="assets/cards/card_06.png" alt="" />
           <span class="chip">NEW</span>
@@ -384,7 +376,7 @@
           <span class="link">進入教材</span>
         </div>
       </a>
-      <a class="card" href="https://dat-fgss.github.io/leverage/" target="_blank" rel="noopener">
+<a class="card" href="https://dat-fgss.github.io/leverage/" target="_blank" rel="noopener">
         <div class="card-face tile-mech">
           <img src="assets/cards/card_07.png" alt="" />
           <span class="chip">NEW</span>
@@ -395,7 +387,7 @@
           <span class="link">進入教材</span>
         </div>
       </a>
-      <a class="card" href="https://dat-fgss.github.io/thin-thick-line/" target="_blank" rel="noopener">
+<a class="card" href="https://dat-fgss.github.io/thin-thick-line/" target="_blank" rel="noopener">
         <div class="card-face tile-drawing">
           <img src="assets/cards/card_05.png" alt="" />
           <span class="chip">NEW</span>
@@ -406,7 +398,7 @@
           <span class="link">進入教材</span>
         </div>
       </a>
-      <a class="card" href="https://dat-fgss.github.io/quiz-thin-thick/" target="_blank" rel="noopener">
+<a class="card" href="https://dat-fgss.github.io/quiz-thin-thick/" target="_blank" rel="noopener">
         <div class="card-face tile-3dprint">
           <img src="assets/cards/card_02.png" alt="" />
           <span class="chip">NEW</span>
@@ -417,7 +409,7 @@
           <span class="link">進入教材</span>
         </div>
       </a>
-      <a class="card" href="https://dat-fgss.github.io/prompt-test/" target="_blank" rel="noopener">
+<a class="card" href="https://dat-fgss.github.io/prompt-test/" target="_blank" rel="noopener">
         <div class="card-face tile-ai">
           <img src="assets/cards/card_08.png" alt="" />
           <span class="chip">NEW</span>
@@ -428,7 +420,7 @@
           <span class="link">進入教材</span>
         </div>
       </a>
-    </div>
+</div>
   </section>
 
   <section class="section" id="about" style="padding-top:0">
@@ -438,7 +430,7 @@
     </div>
   </section>
 
-  <footer>
+  <footer id="contact">
     <div class="footer-inner">
       <div class="footer-brand">
         <img src="assets/logo-crest.png" alt="" width="48" height="48" />
@@ -447,7 +439,10 @@
           <span>設計與應用科技科 DAT</span>
         </div>
       </div>
-      <p class="footer-note">粉嶺官立中學 DAT · 教學材料已上線 · 可本機雙擊 index.html 開啟</p>
+      <div class="footer-note">
+        <p>聯絡：<a class="footer-mail" href="mailto:cnh@fgss.edu.hk">cnh@fgss.edu.hk</a></p>
+        <p>粉嶺官立中學 DAT · 教學材料已上線</p>
+      </div>
     </div>
   </footer>
 
