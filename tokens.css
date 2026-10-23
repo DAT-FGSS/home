@@ -59,14 +59,14 @@
 }
 
 /* Utility helpers (optional) */
-.tile-electronics { background: var(--tile-electronics); }
-.tile-3dprint { background: var(--tile-3dprint); }
-.tile-product { background: var(--tile-product); }
-.tile-woodwork { background: var(--tile-woodwork); }
-.tile-drawing { background: var(--tile-drawing); }
-.tile-stem { background: var(--tile-stem); }
-.tile-mech { background: var(--tile-mech); }
-.tile-ai { background: var(--tile-ai); }
+.tile-electronics { background: var(--tile-electronics); border-color: var(--tile-electronics); }
+.tile-3dprint { background: var(--tile-3dprint); border-color: var(--tile-3dprint); }
+.tile-product { background: var(--tile-product); border-color: var(--tile-product); }
+.tile-woodwork { background: var(--tile-woodwork); border-color: var(--tile-woodwork); }
+.tile-drawing { background: var(--tile-drawing); border-color: var(--tile-drawing); }
+.tile-stem { background: var(--tile-stem); border-color: var(--tile-stem); }
+.tile-mech { background: var(--tile-mech); border-color: var(--tile-mech); }
+.tile-ai { background: var(--tile-ai); border-color: var(--tile-ai); }
 
 .card-tile {
   border-radius: var(--radius-lg);
