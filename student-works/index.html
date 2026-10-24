@@ -73,11 +73,10 @@
       font-size: clamp(1.55rem, 3.2vw, 2.1rem);
       font-weight: 900;
       letter-spacing: 0.01em;
-      margin-bottom: 0.35rem;
     }
-    .page-head p {
-      color: #555;
-      font-size: 1rem;
+    .card:focus-visible {
+      outline: 3px solid var(--green);
+      outline-offset: 3px;
     }
 
     .grid {
@@ -157,9 +156,141 @@
       font-size: 0.78rem;
     }
     .card-meta .who { color: #666; font-weight: 600; line-height: 1.35; flex: 1; min-width: 0; }
-    .card-meta .go {
+
+    body.viewer-open { overflow: hidden; }
+    .viewer {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: flex;
+      align-items: safe center;
+      justify-content: safe center;
+      padding:
+        max(0.85rem, env(safe-area-inset-top))
+        max(0.85rem, env(safe-area-inset-right))
+        max(0.85rem, env(safe-area-inset-bottom))
+        max(0.85rem, env(safe-area-inset-left));
+      background: rgba(17, 17, 17, 0.86);
+      overflow: auto;
+      overscroll-behavior: contain;
+    }
+    .viewer[hidden] { display: none !important; }
+    .viewer-panel {
+      width: min(1100px, 100%);
+      max-height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-height: 0;
+    }
+    .viewer-bar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      color: #fff;
+    }
+    .viewer-caption {
+      flex: 1;
+      min-width: 0;
+      font-size: clamp(0.95rem, 2.4vw, 1.15rem);
       font-weight: 800;
-      letter-spacing: 0.04em;
+      line-height: 1.35;
+      padding-top: 0.45rem;
+    }
+    .viewer-close {
+      appearance: none;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.2rem;
+      min-width: 44px;
+      min-height: 44px;
+      padding: 0.45rem 0.95rem;
+      border: 0;
+      border-radius: 999px;
+      background: #fff;
+      color: #111;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .viewer-close .x {
+      font-size: 1.35rem;
+      font-weight: 500;
+      line-height: 1;
+    }
+    .viewer-close:hover { background: #f2f2f2; }
+    .viewer-close:focus-visible {
+      outline: 3px solid #b7f5cf;
+      outline-offset: 2px;
+    }
+    .viewer-stage {
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #viewer-img,
+    #viewer-frame { display: none; }
+    .viewer.is-image #viewer-img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: calc(100vh - 7.25rem);
+      max-height: calc(100dvh - 7.25rem);
+      object-fit: contain;
+      border-radius: 10px;
+      background: #111;
+    }
+    .viewer.is-pdf {
+      align-items: stretch;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .viewer.is-pdf .viewer-panel {
+      flex: 0 1 auto;
+      height: 100%;
+      width: min(1100px, 100%);
+      max-width: 100%;
+    }
+    .viewer.is-pdf .viewer-stage {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .viewer.is-pdf #viewer-frame {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff;
+    }
+    @media (max-width: 640px) {
+      .viewer {
+        padding:
+          max(0.75rem, env(safe-area-inset-top))
+          max(0.75rem, env(safe-area-inset-right))
+          max(0.75rem, env(safe-area-inset-bottom))
+          max(0.75rem, env(safe-area-inset-left));
+      }
+      .viewer-caption { font-size: 0.92rem; padding-top: 0.55rem; }
+      .viewer.is-image #viewer-img {
+        max-height: calc(100vh - 6.25rem);
+        max-height: calc(100dvh - 6.25rem);
+        border-radius: 8px;
+      }
+      .viewer.is-pdf .viewer-stage { border-radius: 8px; }
     }
 
     .footer {
@@ -200,11 +331,10 @@
   <main class="page">
     <div class="page-head">
       <h1>學生習作和比賽</h1>
-      <p>點擊預覽圖可放大圖片或開啟檔案。</p>
     </div>
 
     <div class="grid">
-      <a class="card" href="assets/01-rm-candy.jpg" target="_blank" rel="noopener">
+      <a class="card" href="assets/01-rm-candy.jpg">
         <div class="card-media">
           <img src="assets/01-rm-candy.jpg" alt="商標設計 吳泳芊" loading="lazy" />
           <span class="chip">習作</span>
@@ -217,12 +347,11 @@
           <hr class="divider" />
           <div class="row2">
             <span class="who">1A 吳泳芊｜電腦繪圖、鐳射切割、AI 展示</span>
-            <span class="go">查看 →</span>
           </div>
         </div>
       </a>
 
-      <a class="card" href="assets/02-rabo.jpg" target="_blank" rel="noopener">
+      <a class="card" href="assets/02-rabo.jpg">
         <div class="card-media">
           <img src="assets/02-rabo.jpg" alt="商標設計 李芷澄" loading="lazy" />
           <span class="chip">習作</span>
@@ -235,12 +364,11 @@
           <hr class="divider" />
           <div class="row2">
             <span class="who">1A 李芷澄｜電腦繪圖、鐳射切割、AI 展示</span>
-            <span class="go">查看 →</span>
           </div>
         </div>
       </a>
 
-      <a class="card" href="assets/03-camera-chan.jpg" target="_blank" rel="noopener">
+      <a class="card" href="assets/03-camera-chan.jpg">
         <div class="card-media">
           <img src="assets/03-camera-chan.jpg" alt="相機設計 陳啟航" loading="lazy" />
           <span class="chip">習作</span>
@@ -253,12 +381,11 @@
           <hr class="divider" />
           <div class="row2">
             <span class="who">4D 陳啟航｜3D 繪圖、渲染、AI 展示</span>
-            <span class="go">查看 →</span>
           </div>
         </div>
       </a>
 
-      <a class="card" href="assets/04-camera-ho.jpg" target="_blank" rel="noopener">
+      <a class="card" href="assets/04-camera-ho.jpg">
         <div class="card-media">
           <img src="assets/04-camera-ho.jpg" alt="相機設計 何希洋" loading="lazy" />
           <span class="chip">習作</span>
@@ -271,12 +398,11 @@
           <hr class="divider" />
           <div class="row2">
             <span class="who">4D 何希洋｜3D 繪圖、渲染、AI 展示</span>
-            <span class="go">查看 →</span>
           </div>
         </div>
       </a>
 
-      <a class="card" href="files/05-bird-scare-ko.pdf" target="_blank" rel="noopener">
+      <a class="card" href="files/05-bird-scare-ko.pdf">
         <div class="card-media">
           <img src="assets/05-bird-scare-preview.jpg" alt="SBA 習作 高睿" loading="lazy" />
           <span class="chip">習作</span>
@@ -289,12 +415,11 @@
           <hr class="divider" />
           <div class="row2">
             <span class="who">6D 高睿</span>
-            <span class="go">開啟檔案 →</span>
           </div>
         </div>
       </a>
 
-      <a class="card" href="assets/06-steam-architecture.jpg" target="_blank" rel="noopener">
+      <a class="card" href="assets/06-steam-architecture.jpg">
         <div class="card-media">
           <img src="assets/06-steam-architecture.jpg" alt="STEAM 建築設計銅獎" loading="lazy" />
           <span class="chip award">比賽</span>
@@ -307,12 +432,11 @@
           <hr class="divider" />
           <div class="row2">
             <span class="who">黃啟協、劉承熹、王胤堯、朱偉豪</span>
-            <span class="go">查看 →</span>
           </div>
         </div>
       </a>
 
-      <a class="card" href="assets/07-aitu-rabbit.jpg" target="_blank" rel="noopener">
+      <a class="card" href="assets/07-aitu-rabbit.jpg">
         <div class="card-media">
           <img src="assets/07-aitu-rabbit.jpg" alt="愛兔 初中組冠軍" loading="lazy" />
           <span class="chip award">比賽</span>
@@ -325,12 +449,11 @@
           <hr class="divider" />
           <div class="row2">
             <span class="who">3C 莊樂瑤｜作品《愛兔》</span>
-            <span class="go">查看 →</span>
           </div>
         </div>
       </a>
 
-      <a class="card" href="assets/08-beidou-star.jpg" target="_blank" rel="noopener">
+      <a class="card" href="assets/08-beidou-star.jpg">
         <div class="card-media">
           <img src="assets/08-beidou-star.jpg" alt="北斗星寶 高中組冠軍" loading="lazy" />
           <span class="chip award">比賽</span>
@@ -343,12 +466,11 @@
           <hr class="divider" />
           <div class="row2">
             <span class="who">5A 呂貞穎｜作品《北斗·星寶》</span>
-            <span class="go">查看 →</span>
           </div>
         </div>
       </a>
 
-      <a class="card" href="assets/09-ai-steam-full.jpg" target="_blank" rel="noopener">
+      <a class="card" href="assets/09-ai-steam-full.jpg">
         <div class="card-media">
           <img src="assets/09-ai-steam-preview.jpg" alt="人工智能創新比賽" loading="lazy" />
           <span class="chip award">比賽</span>
@@ -361,7 +483,6 @@
           <hr class="divider" />
           <div class="row2">
             <span class="who">銀獎：中四 黃芷淇、陳飛帆、寧健琳、莊樂瑤｜銅獎：中三 李婭漤、林熙婷、黃芷欣、陳張恩希</span>
-            <span class="go">放大 →</span>
           </div>
         </div>
       </a>
@@ -371,5 +492,169 @@
   <footer class="footer">
     <p>粉嶺官立中學 · 設計與應用科技科（DAT） · <a href="https://dat-fgss.github.io/home/">返回主頁</a></p>
   </footer>
+
+  <div id="viewer" class="viewer" hidden>
+    <div class="viewer-panel" role="dialog" aria-modal="true" aria-labelledby="viewer-caption">
+      <div class="viewer-bar">
+        <p id="viewer-caption" class="viewer-caption"></p>
+        <button type="button" class="viewer-close" id="viewer-close">
+          <span class="x" aria-hidden="true">×</span>關閉
+        </button>
+      </div>
+      <div class="viewer-stage">
+        <img id="viewer-img" alt="" />
+        <iframe id="viewer-frame" title="檔案預覽"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var viewer = document.getElementById('viewer');
+      var panel = viewer.querySelector('.viewer-panel');
+      var caption = document.getElementById('viewer-caption');
+      var img = document.getElementById('viewer-img');
+      var frame = document.getElementById('viewer-frame');
+      var closeBtn = document.getElementById('viewer-close');
+      var pageParts = document.querySelectorAll('header, main, footer');
+      var open = false;
+      var pushed = false;
+      var lastFocus = null;
+      var scrollY = 0;
+
+      function isPdf(href) {
+        return /\.pdf(?:$|[?#])/i.test(href || '');
+      }
+
+      function lockScroll() {
+        scrollY = window.scrollY || window.pageYOffset || 0;
+        document.body.style.position = 'fixed';
+        document.body.style.top = '-' + scrollY + 'px';
+        document.body.style.left = '0';
+        document.body.style.right = '0';
+        document.body.style.width = '100%';
+        document.body.classList.add('viewer-open');
+      }
+
+      function unlockScroll() {
+        document.body.classList.remove('viewer-open');
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.width = '';
+        window.scrollTo(0, scrollY);
+      }
+
+      function show(card) {
+        var href = card.getAttribute('href');
+        var titleEl = card.querySelector('h2');
+        var title = titleEl ? titleEl.textContent.trim() : '預覽';
+        var thumb = card.querySelector('img');
+        var pdf = isPdf(href);
+
+        caption.textContent = title;
+        viewer.classList.toggle('is-pdf', pdf);
+        viewer.classList.toggle('is-image', !pdf);
+
+        if (pdf) {
+          img.removeAttribute('src');
+          img.alt = '';
+          frame.title = title + ' PDF';
+          frame.src = href;
+        } else {
+          frame.src = 'about:blank';
+          img.alt = (thumb && thumb.alt) || title;
+          img.src = href;
+        }
+
+        viewer.hidden = false;
+        pageParts.forEach(function (el) { el.setAttribute('inert', ''); });
+        lockScroll();
+        lastFocus = card;
+        open = true;
+        closeBtn.focus();
+      }
+
+      function hide() {
+        if (!open) return;
+        open = false;
+        viewer.hidden = true;
+        viewer.classList.remove('is-pdf', 'is-image');
+        img.removeAttribute('src');
+        img.alt = '';
+        frame.src = 'about:blank';
+        frame.title = '檔案預覽';
+        pageParts.forEach(function (el) { el.removeAttribute('inert'); });
+        unlockScroll();
+        if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+      }
+
+      function openFromCard(card) {
+        if (open) return;
+        history.pushState({ swViewer: 1 }, '');
+        pushed = true;
+        show(card);
+      }
+
+      function requestClose() {
+        if (!open) return;
+        var shouldBack = pushed;
+        pushed = false;
+        hide();
+        if (shouldBack) history.back();
+      }
+
+      document.querySelectorAll('a.card').forEach(function (card) {
+        card.setAttribute('aria-haspopup', 'dialog');
+        card.addEventListener('click', function (e) {
+          if (e.defaultPrevented || e.button !== 0) return;
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+          e.preventDefault();
+          openFromCard(card);
+        });
+      });
+
+      closeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        requestClose();
+      });
+
+      viewer.addEventListener('click', function (e) {
+        if (e.target === viewer) requestClose();
+      });
+
+      panel.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (!open) return;
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          requestClose();
+          return;
+        }
+        if (e.key !== 'Tab') return;
+        var nodes = [closeBtn];
+        if (viewer.classList.contains('is-pdf')) nodes.push(frame);
+        var first = nodes[0];
+        var last = nodes[nodes.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      });
+
+      window.addEventListener('popstate', function () {
+        if (!open) return;
+        pushed = false;
+        hide();
+      });
+    })();
+  </script>
 </body>
 </html>
