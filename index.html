@@ -77,6 +77,16 @@
       text-transform: lowercase;
     }
     .nav-links a:hover { color: var(--school-green); }
+    .nav-works {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--school-green);
+      white-space: nowrap;
+      border-bottom: 2px solid var(--school-green);
+      line-height: 1.2;
+    }
+    .nav-works:hover { opacity: 0.8; }
+    .nav-works-menu { display: none; }
     .nav-toggle {
       display: none;
       margin-left: auto;
@@ -280,6 +290,8 @@
 
     @media (max-width: 960px) {
       .grid { grid-template-columns: repeat(2, 1fr); }
+      .nav-works { display: none; }
+      .nav-works-menu { display: block; }
       .nav-links { display: none; }
       .nav-links.open {
         display: flex;
@@ -311,8 +323,10 @@
           <span class="dat">設計與應用科技科 (DAT)</span>
         </span>
       </a>
+      <a class="nav-works" href="student-works/">學生習作和比賽</a>
       <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false">選單</button>
       <nav class="nav-links" id="nav-links" aria-label="主選單">
+        <a class="nav-works-menu" href="student-works/">學生習作和比賽</a>
         <a href="#materials">教學材料</a>
         <a href="#about">關於本科</a>
         <a href="#">專題</a>
@@ -419,6 +433,17 @@
           <h3>提示詞訓練</h3>
           <p>AI 提示詞寫作練習與即時評分挑戰</p>
           <span class="link">進入教材</span>
+        </div>
+      </a>
+      <a class="card" href="student-works/">
+        <div class="card-face tile-ai">
+          <img src="student-works/assets/09-ai-steam-preview.jpg" alt="" />
+          <span class="chip">NEW</span>
+        </div>
+        <div class="card-meta">
+          <h3>學生習作和比賽</h3>
+          <p>學生作品、SBA 習作與校際比賽成果</p>
+          <span class="link">進入專頁</span>
         </div>
       </a>
 </div>

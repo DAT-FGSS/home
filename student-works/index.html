@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>學生習作和比賽｜粉嶺官立中學 DAT</title>
+  <style>
+    :root {
+      --bg: #f7f5f1;
+      --card: #ffffff;
+      --text: #111111;
+      --muted: #8a8a8a;
+      --line: #e6e4df;
+      --green: #0A7A4F;
+      --container: 1180px;
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .nav {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner {
+      width: min(100%, var(--container));
+      margin: 0 auto;
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .brand img {
+      width: 72px; height: 72px;
+      object-fit: contain;
+      display: block;
+    }
+    .brand-text { display: flex; flex-direction: column; gap: 0.12rem; line-height: 1.2; }
+    .brand-text .school {
+      font-size: 1.25rem; font-weight: 800; color: #111;
+    }
+    .brand-text .dat {
+      font-size: 1.1rem; font-weight: 800; color: var(--green);
+    }
+    .nav-home {
+      font-size: 0.95rem; font-weight: 700; color: var(--green);
+      border-bottom: 2px solid var(--green); padding-bottom: 0.1rem;
+      white-space: nowrap;
+    }
+    .nav-home:hover { opacity: 0.85; }
+
+    .page {
+      width: min(100%, var(--container));
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+    .page-head {
+      margin-bottom: 1.75rem;
+    }
+    .page-head h1 {
+      font-size: clamp(1.55rem, 3.2vw, 2.1rem);
+      font-weight: 900;
+      letter-spacing: 0.01em;
+      margin-bottom: 0.35rem;
+    }
+    .page-head p {
+      color: #555;
+      font-size: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.15rem;
+    }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.09);
+    }
+    .card-media {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      background: #eceae6;
+      overflow: hidden;
+    }
+    .card-media img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .chip {
+      position: absolute;
+      top: 0.65rem; left: 0.65rem;
+      background: #111; color: #fff;
+      font-size: 0.68rem; font-weight: 800;
+      letter-spacing: 0.06em;
+      padding: 0.22rem 0.45rem;
+      border-radius: 3px;
+    }
+    .chip.new { background: #c62828; }
+    .chip.award { background: #1565c0; }
+    .card-meta {
+      padding: 0.85rem 0.95rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      flex: 1;
+    }
+    .card-meta .row1 {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .card-meta h2 {
+      font-size: 0.92rem;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+    .card-meta .tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .card-meta .divider {
+      border: 0; border-top: 1px solid var(--line);
+      margin: 0.1rem 0;
+    }
+    .card-meta .row2 {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+    }
+    .card-meta .who { color: #666; font-weight: 600; line-height: 1.35; flex: 1; min-width: 0; }
+    .card-meta .go {
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .footer {
+      width: min(100%, var(--container));
+      margin: 0 auto;
+      padding: 0 1.25rem 2.5rem;
+      color: #777;
+      font-size: 0.85rem;
+    }
+    .footer a { color: var(--green); font-weight: 700; }
+
+    @media (max-width: 960px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      .brand img { width: 60px; height: 60px; }
+      .brand-text .school { font-size: 1.1rem; }
+      .brand-text .dat { font-size: 0.98rem; }
+    }
+    @media (max-width: 560px) {
+      .grid { grid-template-columns: 1fr; }
+      .nav-inner { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="https://dat-fgss.github.io/home/">
+        <img src="assets/logo-crest.png" alt="粉嶺官立中學校徽" width="72" height="72" />
+        <span class="brand-text">
+          <span class="school">粉嶺官立中學</span>
+          <span class="dat">設計與應用科技科 (DAT)</span>
+        </span>
+      </a>
+      <a class="nav-home" href="https://dat-fgss.github.io/home/">返回 DAT 主頁</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="page-head">
+      <h1>學生習作和比賽</h1>
+      <p>點擊預覽圖可放大圖片或開啟檔案。</p>
+    </div>
+
+    <div class="grid">
+      <a class="card" href="assets/01-rm-candy.jpg" target="_blank" rel="noopener">
+        <div class="card-media">
+          <img src="assets/01-rm-candy.jpg" alt="商標設計 吳泳芊" loading="lazy" />
+          <span class="chip">習作</span>
+        </div>
+        <div class="card-meta">
+          <div class="row1">
+            <h2>商標設計</h2>
+            <span class="tag">LOGO</span>
+          </div>
+          <hr class="divider" />
+          <div class="row2">
+            <span class="who">1A 吳泳芊｜電腦繪圖、鐳射切割、AI 展示</span>
+            <span class="go">查看 →</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="assets/02-rabo.jpg" target="_blank" rel="noopener">
+        <div class="card-media">
+          <img src="assets/02-rabo.jpg" alt="商標設計 李芷澄" loading="lazy" />
+          <span class="chip">習作</span>
+        </div>
+        <div class="card-meta">
+          <div class="row1">
+            <h2>商標設計</h2>
+            <span class="tag">LOGO</span>
+          </div>
+          <hr class="divider" />
+          <div class="row2">
+            <span class="who">1A 李芷澄｜電腦繪圖、鐳射切割、AI 展示</span>
+            <span class="go">查看 →</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="assets/03-camera-chan.jpg" target="_blank" rel="noopener">
+        <div class="card-media">
+          <img src="assets/03-camera-chan.jpg" alt="相機設計 陳啟航" loading="lazy" />
+          <span class="chip">習作</span>
+        </div>
+        <div class="card-meta">
+          <div class="row1">
+            <h2>相機設計</h2>
+            <span class="tag">產品</span>
+          </div>
+          <hr class="divider" />
+          <div class="row2">
+            <span class="who">4D 陳啟航｜3D 繪圖、渲染、AI 展示</span>
+            <span class="go">查看 →</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="assets/04-camera-ho.jpg" target="_blank" rel="noopener">
+        <div class="card-media">
+          <img src="assets/04-camera-ho.jpg" alt="相機設計 何希洋" loading="lazy" />
+          <span class="chip">習作</span>
+        </div>
+        <div class="card-meta">
+          <div class="row1">
+            <h2>相機設計</h2>
+            <span class="tag">產品</span>
+          </div>
+          <hr class="divider" />
+          <div class="row2">
+            <span class="who">4D 何希洋｜3D 繪圖、渲染、AI 展示</span>
+            <span class="go">查看 →</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="files/05-bird-scare-ko.pdf" target="_blank" rel="noopener">
+        <div class="card-media">
+          <img src="assets/05-bird-scare-preview.jpg" alt="SBA 習作 高睿" loading="lazy" />
+          <span class="chip">習作</span>
+        </div>
+        <div class="card-meta">
+          <div class="row1">
+            <h2>SBA 習作</h2>
+            <span class="tag">PDF</span>
+          </div>
+          <hr class="divider" />
+          <div class="row2">
+            <span class="who">6D 高睿</span>
+            <span class="go">開啟檔案 →</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="assets/06-steam-architecture.jpg" target="_blank" rel="noopener">
+        <div class="card-media">
+          <img src="assets/06-steam-architecture.jpg" alt="STEAM 建築設計銅獎" loading="lazy" />
+          <span class="chip award">比賽</span>
+        </div>
+        <div class="card-meta">
+          <div class="row1">
+            <h2>2023/24 心繫家國 STEAM 建築設計及藝術創作比賽 銅獎</h2>
+            <span class="tag">銅獎</span>
+          </div>
+          <hr class="divider" />
+          <div class="row2">
+            <span class="who">黃啟協、劉承熹、王胤堯、朱偉豪</span>
+            <span class="go">查看 →</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="assets/07-aitu-rabbit.jpg" target="_blank" rel="noopener">
+        <div class="card-media">
+          <img src="assets/07-aitu-rabbit.jpg" alt="愛兔 初中組冠軍" loading="lazy" />
+          <span class="chip award">比賽</span>
+        </div>
+        <div class="card-meta">
+          <div class="row1">
+            <h2>2025/26 青年創科實踐挑戰賽 初中組冠軍</h2>
+            <span class="tag">冠軍</span>
+          </div>
+          <hr class="divider" />
+          <div class="row2">
+            <span class="who">3C 莊樂瑤｜作品《愛兔》</span>
+            <span class="go">查看 →</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="assets/08-beidou-star.jpg" target="_blank" rel="noopener">
+        <div class="card-media">
+          <img src="assets/08-beidou-star.jpg" alt="北斗星寶 高中組冠軍" loading="lazy" />
+          <span class="chip award">比賽</span>
+        </div>
+        <div class="card-meta">
+          <div class="row1">
+            <h2>2025/26 青年創科實踐挑戰賽 高中組冠軍</h2>
+            <span class="tag">冠軍</span>
+          </div>
+          <hr class="divider" />
+          <div class="row2">
+            <span class="who">5A 呂貞穎｜作品《北斗·星寶》</span>
+            <span class="go">查看 →</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="assets/09-ai-steam-full.jpg" target="_blank" rel="noopener">
+        <div class="card-media">
+          <img src="assets/09-ai-steam-preview.jpg" alt="人工智能創新比賽" loading="lazy" />
+          <span class="chip award">比賽</span>
+        </div>
+        <div class="card-meta">
+          <div class="row1">
+            <h2>香港官立中學學習圈（人工智能教育）人工智能創新比賽</h2>
+            <span class="tag">銀／銅獎</span>
+          </div>
+          <hr class="divider" />
+          <div class="row2">
+            <span class="who">銀獎：中四 黃芷淇、陳飛帆、寧健琳、莊樂瑤｜銅獎：中三 李婭漤、林熙婷、黃芷欣、陳張恩希</span>
+            <span class="go">放大 →</span>
+          </div>
+        </div>
+      </a>
+</div>
+  </main>
+
+  <footer class="footer">
+    <p>粉嶺官立中學 · 設計與應用科技科（DAT） · <a href="https://dat-fgss.github.io/home/">返回主頁</a></p>
+  </footer>
+</body>
+</html>
