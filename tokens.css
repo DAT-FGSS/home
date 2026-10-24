@@ -32,6 +32,8 @@
   /* New plates after student-works pink: teal (ESP32) then green (3D, coming soon) */
   --tile-esp32: #2BBBAD;
   --tile-3dsoon: #56AB68;
+  /* Designer-chairs plate — same purple as the product candy tile */
+  --tile-chairs: #9155D9;
 
   /* CTA (hero button — coral energy like reference) */
   --cta: #E85A4F;
@@ -72,6 +74,7 @@
 .tile-ai { background: var(--tile-ai); }
 .tile-esp32 { background: var(--tile-esp32); }
 .tile-3dsoon { background: var(--tile-3dsoon); }
+.tile-chairs { background: var(--tile-chairs); }
 
 .card-tile {
   border-radius: var(--radius-lg);

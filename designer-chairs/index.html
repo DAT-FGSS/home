@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>閱讀材料｜設計師椅子｜粉嶺官立中學 DAT</title>
+  <style>
+    :root {
+      --bg: #f7f5f1;
+      --card: #fff;
+      --text: #111;
+      --muted: #5a5a5a;
+      --line: #e6e4df;
+      --green: #0A7A4F;
+      --container: 880px;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+    a { color: var(--green); }
+    .nav {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .nav-inner {
+      width: min(100%, var(--container));
+      margin: 0 auto;
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 0.75rem;
+      text-decoration: none; color: inherit;
+    }
+    .brand img { width: 56px; height: 56px; object-fit: contain; }
+    .brand-text { display: flex; flex-direction: column; gap: 0.1rem; line-height: 1.25; }
+    .brand-text .school { font-size: 1.05rem; font-weight: 800; }
+    .brand-text .dat { font-size: 0.95rem; font-weight: 800; color: var(--green); }
+    .nav-home {
+      font-weight: 700; color: var(--green);
+      border-bottom: 2px solid var(--green); text-decoration: none;
+      white-space: nowrap;
+    }
+    .page {
+      width: min(100%, var(--container));
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3.5rem;
+    }
+    h1 {
+      font-size: clamp(1.45rem, 3.2vw, 1.9rem);
+      font-weight: 900;
+      margin-bottom: 0.35rem;
+    }
+    .lede { color: var(--muted); margin-bottom: 1.25rem; }
+    .view { display: none; }
+    .view.active { display: block; }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.35rem 1.4rem;
+      margin-bottom: 1.15rem;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+    }
+    .card h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.45rem;
+      border-bottom: 2px solid var(--green);
+    }
+    .article p {
+      margin: 0.75rem 0;
+      text-align: justify;
+      font-size: 1.02rem;
+    }
+    .article .book-cite {
+      background: #eef7f1;
+      border-left: 4px solid var(--green);
+      padding: 0.75rem 1rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+      color: #234;
+    }
+    .article .book-cite strong { display: block; margin-bottom: 0.25rem; }
+    figure.pic {
+      margin: 1rem 0;
+      background: #fafafa;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+    figure.pic .row {
+      display: grid;
+      gap: 0;
+    }
+    figure.pic .row.cols-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+    @media (max-width: 640px) {
+      figure.pic .row.cols-2 { grid-template-columns: 1fr; }
+    }
+    figure.pic img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 480px;
+      object-fit: contain;
+      background: #fff;
+    }
+    figure.pic figcaption {
+      padding: 0.65rem 0.9rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+      white-space: pre-line;
+    }
+    .chair-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    @media (max-width: 720px) {
+      .chair-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 420px) {
+      .chair-grid { grid-template-columns: 1fr; }
+    }
+    .chair-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+      cursor: pointer;
+    }
+    .chair-card:hover, .chair-card:focus-visible {
+      transform: translateY(-2px);
+      border-color: var(--green);
+      box-shadow: 0 6px 18px rgba(10,122,79,0.15);
+      outline: none;
+    }
+    .chair-card .thumb {
+      aspect-ratio: 4/3;
+      background: #f0f0ec;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .chair-card .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #f5f5f5;
+    }
+    .chair-card .meta {
+      padding: 0.7rem 0.85rem 0.9rem;
+    }
+    .chair-card .meta .num {
+      color: var(--green);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    .chair-card .meta .name {
+      font-weight: 800;
+      font-size: 0.98rem;
+      margin-top: 0.15rem;
+      line-height: 1.35;
+    }
+    .chair-card .meta .hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+    .back-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 0.55rem 1.1rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { filter: brightness(1.05); }
+    .btn-ghost {
+      background: #fff;
+      color: var(--green);
+      border: 1.5px solid var(--green);
+    }
+    .chair-hero {
+      margin-bottom: 1.15rem;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .chair-hero img {
+      display: block;
+      width: 100%;
+      max-height: 420px;
+      object-fit: contain;
+      background: #fafafa;
+    }
+    .chair-hero figcaption {
+      padding: 0.7rem 1rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .chair-title {
+      font-size: clamp(1.25rem, 2.8vw, 1.65rem);
+      font-weight: 900;
+      margin-bottom: 0.25rem;
+    }
+    .footer-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+<header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="https://dat-fgss.github.io/home/" title="返回 DAT 主站">
+        <img src="assets/logo-crest.png" alt="粉嶺官立中學校徽" width="56" height="56" />
+        <span class="brand-text">
+          <span class="school">粉嶺官立中學</span>
+          <span class="dat">設計與應用科技 DAT</span>
+        </span>
+      </a>
+      <a class="nav-home" href="https://dat-fgss.github.io/home/">主頁</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <div id="view-hub" class="view active"></div>
+    <div id="view-chair" class="view"></div>
+  </main>
+
+  <script src="data.js"></script>
+  <script>
+    const DATA = window.CHAIRS_DATA;
+    const hubEl = document.getElementById('view-hub');
+    const chairEl = document.getElementById('view-chair');
+
+    function esc(s) {
+      return String(s || '').replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      })[c]);
+    }
+
+    function renderFigures(blocks) {
+      let html = '';
+      let i = 0;
+      const bookLines = [];
+      while (i < blocks.length) {
+        const b = blocks[i];
+        if (b.type === 'p') {
+          const t = b.text.trim();
+          // Collect consecutive book cite lines into one box
+          if (/^(書名|作者|出版者|ISBN)/.test(t)) {
+            bookLines.push(t);
+            i++;
+            // peek ahead
+            while (i < blocks.length && blocks[i].type === 'p' && /^(書名|作者|出版者|ISBN)/.test(blocks[i].text.trim())) {
+              bookLines.push(blocks[i].text.trim());
+              i++;
+            }
+            html += '<div class="book-cite"><strong>參考書目</strong>' +
+              bookLines.map(l => esc(l)).join('<br>') + '</div>';
+            bookLines.length = 0;
+            continue;
+          }
+          // Skip hub title duplicate if same as page h1 context
+          if (t === DATA.hub.title) { i++; continue; }
+          html += '<p>' + esc(t) + '</p>';
+          i++;
+          continue;
+        }
+        if (b.type === 'figure') {
+          const cols = b.images.length > 1 ? ' cols-2' : '';
+          html += '<figure class="pic"><div class="row' + cols + '">';
+          b.images.forEach(img => {
+            html += '<img src="assets/web/' + esc(img) + '" alt="" loading="lazy" />';
+          });
+          html += '</div>';
+          if (b.caption) {
+            html += '<figcaption>' + esc(b.caption) + '</figcaption>';
+          }
+          html += '</figure>';
+        }
+        i++;
+      }
+      return html;
+    }
+
+    function renderHub() {
+      const chairs = DATA.chairs;
+      let grid = '<div class="chair-grid">';
+      chairs.forEach((c, idx) => {
+        grid +=
+          '<a class="chair-card" href="#/chair/' + esc(c.id) + '">' +
+            '<div class="thumb"><img src="' + esc(c.thumb) + '" alt="' + esc(c.short) + '" loading="lazy" /></div>' +
+            '<div class="meta">' +
+              '<div class="num">0' + (idx + 1) + '</div>' +
+              '<div class="name">' + esc(c.short) + '</div>' +
+              '<div class="hint">撳圖閱讀故事 →</div>' +
+            '</div>' +
+          '</a>';
+      });
+      grid += '</div>';
+
+      hubEl.innerHTML =
+        '<h1>閱讀材料｜設計師椅子</h1>' +
+        '<p class="lede">粉嶺官立中學 · 設計與應用科技（DAT）主題閱讀</p>' +
+        '<section class="card">' +
+          '<h2>' + esc(DATA.hub.title) + '</h2>' +
+          '<div class="article">' + renderFigures(DATA.hub.blocks) + '</div>' +
+        '</section>' +
+        '<section class="card">' +
+          '<h2>六張經典設計師椅</h2>' +
+          grid +
+        '</section>' +
+        '<p class="footer-note">內容改編自王受之《為坐而做 41把椅子的故事》</p>';
+    }
+
+    function renderChair(id) {
+      const c = DATA.chairs.find(x => x.id === id);
+      if (!c) {
+        location.hash = '#/';
+        return;
+      }
+      chairEl.innerHTML =
+        '<div class="back-bar">' +
+          '<a class="btn" href="#/">← 返回目錄</a>' +
+          '<a class="btn btn-ghost" href="https://dat-fgss.github.io/home/">DAT 主站</a>' +
+        '</div>' +
+        '<h1 class="chair-title">' + esc(c.title) + '</h1>' +
+        '<figure class="chair-hero">' +
+          '<img src="' + esc(c.hero) + '" alt="' + esc(c.short) + '" />' +
+          '<figcaption>' + esc(c.heroCaption || c.short) + '</figcaption>' +
+        '</figure>' +
+        '<section class="card">' +
+          '<div class="article">' + renderFigures(c.blocks) + '</div>' +
+        '</section>' +
+        '<div class="back-bar" style="margin-top:0.5rem">' +
+          '<a class="btn" href="#/">← 返回目錄</a>' +
+        '</div>';
+    }
+
+    function route() {
+      const h = (location.hash || '#/').replace(/^#/, '') || '/';
+      const m = h.match(/^\/chair\/([a-z0-9-]+)/i);
+      if (m) {
+        hubEl.classList.remove('active');
+        chairEl.classList.add('active');
+        renderChair(m[1].toLowerCase());
+        window.scrollTo(0, 0);
+      } else {
+        chairEl.classList.remove('active');
+        hubEl.classList.add('active');
+        if (!hubEl.dataset.ready) {
+          renderHub();
+          hubEl.dataset.ready = '1';
+        }
+        window.scrollTo(0, 0);
+      }
+    }
+
+    window.addEventListener('hashchange', route);
+    renderHub();
+    hubEl.dataset.ready = '1';
+    route();
+  </script>
+</body>
+</html>
