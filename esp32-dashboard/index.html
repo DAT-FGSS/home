@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>製作小型資訊儀表板｜粉嶺官立中學 DAT</title>
+  <style>
+    :root {
+      --bg: #f7f5f1;
+      --card: #fff;
+      --text: #111;
+      --muted: #5a5a5a;
+      --line: #e6e4df;
+      --green: #0A7A4F;
+      --accent: #1565c0;
+      --container: 880px;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    a { color: var(--green); }
+    .nav {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner {
+      width: min(100%, var(--container));
+      margin: 0 auto;
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 0.75rem;
+      text-decoration: none; color: inherit;
+    }
+    .brand img { width: 64px; height: 64px; object-fit: contain; }
+    .brand-text { display: flex; flex-direction: column; gap: 0.1rem; line-height: 1.25; }
+    .brand-text .school { font-size: 1.15rem; font-weight: 800; }
+    .brand-text .dat { font-size: 1rem; font-weight: 800; color: var(--green); }
+    .nav-home {
+      font-weight: 700; color: var(--green);
+      border-bottom: 2px solid var(--green); text-decoration: none;
+      white-space: nowrap;
+    }
+    .page {
+      width: min(100%, var(--container));
+      margin: 0 auto;
+      padding: 1.75rem 1.25rem 3.5rem;
+    }
+    h1 {
+      font-size: clamp(1.55rem, 3.2vw, 2rem);
+      font-weight: 900;
+      margin-bottom: 0.35rem;
+    }
+    .lede { color: var(--muted); margin-bottom: 1.5rem; }
+    .hero {
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      margin-bottom: 1.75rem;
+    }
+    .hero img {
+      display: block; width: 100%; height: auto;
+      max-height: 420px; object-fit: cover;
+    }
+    .hero figcaption {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem; color: var(--muted);
+    }
+    section {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.35rem 1.4rem;
+      margin-bottom: 1.15rem;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+    }
+    section h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.45rem;
+      border-bottom: 2px solid var(--green);
+      display: flex; align-items: baseline; gap: 0.5rem;
+    }
+    section h2 .num {
+      color: var(--green); font-size: 0.85rem; letter-spacing: 0.04em;
+    }
+    section h3 {
+      font-size: 1rem; font-weight: 800;
+      margin: 1rem 0 0.45rem;
+    }
+    ul, ol { padding-left: 1.25rem; }
+    li { margin: 0.35rem 0; }
+    .note {
+      background: #eef7f1;
+      border-left: 4px solid var(--green);
+      padding: 0.65rem 0.85rem;
+      border-radius: 0 8px 8px 0;
+      margin: 0.75rem 0;
+      font-size: 0.95rem;
+    }
+    .warn {
+      background: #fff8e6;
+      border-left: 4px solid #e6a700;
+      padding: 0.65rem 0.85rem;
+      border-radius: 0 8px 8px 0;
+      margin: 0.75rem 0;
+      font-size: 0.95rem;
+    }
+    code, .mono {
+      font-family: ui-monospace, "SF Mono", Consolas, monospace;
+      font-size: 0.88em;
+      background: #f0eeea;
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      word-break: break-all;
+    }
+    .settings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.45rem 1rem;
+      margin-top: 0.5rem;
+    }
+    @media (max-width: 560px) { .settings { grid-template-columns: 1fr; } }
+    .settings div {
+      display: flex; flex-direction: column;
+      gap: 0.1rem; padding: 0.55rem 0.7rem;
+      background: #f7f5f1; border-radius: 8px;
+    }
+    .settings dt { font-size: 0.78rem; color: var(--muted); font-weight: 700; }
+    .settings dd { font-weight: 700; margin: 0; }
+    .dl-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+    .dl {
+      display: flex; flex-direction: column; gap: 0.35rem;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      text-decoration: none; color: inherit;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .dl:hover {
+      border-color: var(--green);
+      box-shadow: 0 4px 14px rgba(10,122,79,0.12);
+    }
+    .dl strong { color: var(--green); font-size: 1.02rem; }
+    .dl span { font-size: 0.85rem; color: var(--muted); }
+    .footer {
+      width: min(100%, var(--container));
+      margin: 0 auto;
+      padding: 0 1.25rem 2.5rem;
+      font-size: 0.88rem; color: #777;
+    }
+    .footer a { font-weight: 700; }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.85rem;
+    }
+    .gallery figure {
+      margin: 0;
+      background: #f7f5f1;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .gallery img {
+      display: block; width: 100%; height: 180px;
+      object-fit: cover;
+    }
+    .gallery figcaption {
+      padding: 0.5rem 0.7rem;
+      font-size: 0.85rem; color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+<header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="https://dat-fgss.github.io/home/">
+        <img src="assets/logo-crest.png" width="64" height="64" alt="粉嶺官立中學校徽" />
+        <span class="brand-text">
+          <span class="school">粉嶺官立中學</span>
+          <span class="dat">設計與應用科技科 (DAT)</span>
+        </span>
+      </a>
+      <a class="nav-home" href="https://dat-fgss.github.io/home/">返回 DAT 主頁</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <h1>製作小型資訊儀表板</h1>
+    <p class="lede">用 ESP32-S3 2.8″ 觸控屏＋3D 打印外殼，做一個顯示時間、天氣、巴士到站等資訊嘅桌上儀表板。粉嶺官立中學 DAT 教學頁。</p>
+
+    <figure class="hero">
+      <img src="assets/product_hero.jpg" alt="ESP32-S3 資訊儀表板成品：顯示時間、天氣、巴士到站" />
+      <figcaption>成品示例：主畫面有儀表板、日曆、計時器、Wi‑Fi、巴士站等功能入口。</figcaption>
+    </figure>
+
+    <section id="gallery">
+      <h2><span class="num">01</span>成品與外殼</h2>
+      <div class="gallery">
+        <figure>
+          <img src="assets/product_menu_web.jpg" alt="主畫面：儀表板、日曆、計時器、Wi‑Fi、巴士站" loading="lazy" />
+          <figcaption>主畫面選單</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/product_dashboard_web.jpg" alt="資訊儀表板：天氣、時間、巴士到站" loading="lazy" />
+          <figcaption>資訊儀表板畫面</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/print_slicer_web.jpg" alt="3D 打印外殼切片預覽（Bambu Studio）" loading="lazy" />
+          <figcaption>外殼 3D 切片（打印前）</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="materials">
+      <h2><span class="num">02</span>需要材料</h2>
+      <ul>
+        <li><strong>ESP32-S3 2.8 吋電容觸控屏</strong>（Waveshare ESP32-S3-Touch-LCD-2.8 V1／V2；觸控晶片 CST328 或 CST3530）</li>
+        <li><strong>3D 打印外殼</strong>（可下載本頁 STL／F3D）</li>
+        <li><strong>Type-C 電源線</strong></li>
+        <li><strong>M2.5×12 平頭螺絲 ×4</strong></li>
+        <li><strong>3.7V 鋰電池</strong>（約 1000mAh，mx1.25 插頭）— 若長時間用電源線供電，可不購買</li>
+      </ul>
+    </section>
+
+    <section id="process">
+      <h2><span class="num">03</span>製作過程</h2>
+      <ol>
+        <li>
+          <strong>用 AI 做 Vibe Coding（可選）</strong><br />
+          按你想要的功能同介面，請 AI 為 <span class="mono">ESP32-S3 V2</span>、<span class="mono">Waveshare</span> 觸控晶片 <span class="mono">CST3530</span> 寫程式。
+          <div class="note">唔想自己寫？直接下載本教學程式包 <span class="mono">ESP32_S3_Multimedia.zip</span>（見下方下載）。</div>
+        </li>
+        <li><strong>把程式燒錄到 ESP32</strong>（跟下一節「程式燒錄過程」）</li>
+        <li><strong>測試及安裝</strong>：通電確認畫面同觸控正常後，裝入 3D 外殼，鎖上螺絲；可選接上鋰電池。</li>
+      </ol>
+    </section>
+
+    <section id="flash">
+      <h2><span class="num">04</span>程式燒錄過程</h2>
+      <p>建議用 <a href="https://www.arduino.cc/en/software/" target="_blank" rel="noopener">Arduino IDE</a>（未安裝可先下載）。</p>
+
+      <h3>一）加入 ESP32 開發板</h3>
+      <ol>
+        <li>開 Arduino IDE →「檔案」→「偏好設定」</li>
+        <li>喺「額外的開發板管理員網址」貼上：<br /><span class="mono">https://espressif.github.io/arduino-esp32/package_esp32_index.json</span></li>
+        <li>確定後，「工具」→「開發板」→「開發板管理員」</li>
+        <li>搜尋 <span class="mono">esp32</span>，選 <strong>esp32 by Espressif Systems</strong> → 安裝（建議 3.0 或以上）</li>
+        <li>裝完後，「工具」→「開發板」揀 <strong>ESP32S3 Dev Module</strong></li>
+      </ol>
+
+      <h3>二）安裝程式庫</h3>
+      <ol>
+        <li>「工具」→「管理程式庫」（或「素描」→「引入程式庫」→「管理程式庫」）</li>
+        <li>搜尋 <strong>GFX Library for Arduino</strong>（作者 moononournation）→ 安裝</li>
+        <li>再搜尋 <strong>U8g2</strong>（作者 oliver）→ 安裝</li>
+      </ol>
+
+      <h3>三）燒錄設定</h3>
+      <p>接上 Type-C，喺「工具」選好以下項目，再開啟資料夾入面嘅 <span class="mono">ESP32_S3_Multimedia.ino</span> 並上傳：</p>
+      <div class="settings">
+        <div><dt>開發板</dt><dd>ESP32S3 Dev Module</dd></div>
+        <div><dt>USB CDC On Boot</dt><dd>Enabled</dd></div>
+        <div><dt>Flash Size</dt><dd>16MB</dd></div>
+        <div><dt>PSRAM</dt><dd>OPI PSRAM</dd></div>
+        <div><dt>Partition Scheme</dt><dd>16M Flash (3MB APP / 9.9MB FATFS)</dd></div>
+        <div><dt>埠</dt><dd>選板子對應的 COM／埠</dd></div>
+      </div>
+      <div class="warn">Wi‑Fi：公開程式包只附 <span class="mono">secrets.h.example</span>。可複製成 <span class="mono">secrets.h</span> 填入熱點，或燒錄後用觸控「Wi‑Fi 設定」加入（建議）。唔好把真實密碼提交到公開倉庫。</div>
+    </section>
+
+    <section id="test">
+      <h2><span class="num">05</span>測試及安裝</h2>
+      <ol>
+        <li>燒錄成功後重啟，應見到開機畫面（粉嶺官立中學校徽）同主選單。</li>
+        <li>試撳：儀表板、日曆、計時器、Wi‑Fi、巴士站等圖示。</li>
+        <li>連上 Wi‑Fi 後，可睇天氣、巴士到站等網絡資料（視程式設定）。</li>
+        <li>確認無誤，將主板放入 3D 外殼，用 4 粒 M2.5×12 平頭螺絲固定；需要時接上鋰電池。</li>
+      </ol>
+    </section>
+
+    <section id="downloads">
+      <h2><span class="num">06</span>下載檔案</h2>
+      <div class="dl-grid">
+        <a class="dl" href="downloads/ESP32_S3_Multimedia.zip" download>
+          <strong>程式 ZIP</strong>
+          <span>ESP32_S3_Multimedia.zip · Arduino 專案（已去掉 secrets.h）</span>
+        </a>
+        <a class="dl" href="downloads/esp32-s3-dashboard-case.stl" download>
+          <strong>外殼 STL</strong>
+          <span>3D 打印用 · esp32-s3-dashboard-case.stl</span>
+        </a>
+        <a class="dl" href="downloads/esp32-s3-dashboard-case.f3d" download>
+          <strong>外殼 F3D</strong>
+          <span>Fusion 360 可編輯 · esp32-s3-dashboard-case.f3d</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>粉嶺官立中學 · 設計與應用科技科（DAT） · <a href="https://dat-fgss.github.io/home/">返回主頁</a></p>
+  </footer>
+</body>
+</html>

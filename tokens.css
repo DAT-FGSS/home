@@ -29,6 +29,9 @@
   --tile-stem: #74C4E7;
   --tile-mech: #EB9F53;
   --tile-ai: #EC5B92;
+  /* New plates after student-works pink: teal (ESP32) then green (3D, coming soon) */
+  --tile-esp32: #2BBBAD;
+  --tile-3dsoon: #56AB68;
 
   /* CTA (hero button — coral energy like reference) */
   --cta: #E85A4F;
@@ -67,6 +70,8 @@
 .tile-stem { background: var(--tile-stem); }
 .tile-mech { background: var(--tile-mech); }
 .tile-ai { background: var(--tile-ai); }
+.tile-esp32 { background: var(--tile-esp32); }
+.tile-3dsoon { background: var(--tile-3dsoon); }
 
 .card-tile {
   border-radius: var(--radius-lg);

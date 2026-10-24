@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="tokens.css?v=20261024b" />
+  <link rel="stylesheet" href="tokens.css?v=20261024c" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -198,6 +198,9 @@
       transition: transform 0.15s ease;
     }
     .card:hover { transform: translateY(-4px); }
+    .card-soon,
+    .card-soon:hover { transform: none; cursor: default; }
+    .card-soon .link { color: var(--text-muted); }
     .card-face {
       position: relative;
       aspect-ratio: 4 / 3;
@@ -324,7 +327,7 @@
   </header>
 
   <div class="ticker" aria-hidden="true">
-    <span class="ticker-track">動手設計　·　實踐科技　·　創造未來　·　電子　·　3D 打印　·　產品設計　·　繪圖　·　STEM／Vibe Coding　·　機械結構　·　AI 與智能科技　·　</span>
+    <span class="ticker-track">動手設計　·　實踐科技　·　創造未來　·　機械結構　·　電子　·　3D 打印　·　產品設計　·　繪圖　·　STEAM　·　AI 與智能科技　·　</span>
   </div>
 
   <section class="hero" aria-label="主視覺">
@@ -422,6 +425,28 @@
           <span class="link">進入教材</span>
         </div>
       </a>
+      <a class="card" href="esp32-dashboard/">
+        <div class="card-face tile-esp32">
+          <img src="assets/cards/card_esp32-dashboard.png?v=20261024c" alt="" />
+          <span class="chip">NEW</span>
+        </div>
+        <div class="card-meta">
+          <h3>ESP32-S3 資訊儀表板</h3>
+          <p>天氣、巴士到站與課堂小工具一機完成</p>
+          <span class="link">進入教材</span>
+        </div>
+      </a>
+      <div class="card card-soon" role="group" aria-label="3D打印教學，教材準備中">
+        <div class="card-face tile-3dsoon">
+          <img src="assets/cards/card_3d-print-coming.png?v=20261024c" alt="" />
+          <span class="chip">準備中</span>
+        </div>
+        <div class="card-meta">
+          <h3>3D打印教學</h3>
+          <p>教材準備中，稍後上線</p>
+          <span class="link">稍後上線</span>
+        </div>
+      </div>
       <a class="card" href="student-works/">
         <div class="card-face tile-ai">
           <img src="assets/cards/card_student_works.png?v=20261024b" alt="" />
