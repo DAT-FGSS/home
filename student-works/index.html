@@ -250,13 +250,14 @@
     }
     .viewer.is-pdf {
       align-items: stretch;
+      justify-content: center;
       overflow: hidden;
     }
     .viewer.is-pdf .viewer-panel {
-      flex: 1;
+      flex: 0 1 auto;
       height: 100%;
       width: min(1100px, 100%);
-      margin-inline: auto;
+      max-width: 100%;
     }
     .viewer.is-pdf .viewer-stage {
       flex: 1;
@@ -278,10 +279,10 @@
     @media (max-width: 640px) {
       .viewer {
         padding:
-          max(0.55rem, env(safe-area-inset-top))
-          max(0.55rem, env(safe-area-inset-right))
-          max(0.55rem, env(safe-area-inset-bottom))
-          max(0.55rem, env(safe-area-inset-left));
+          max(0.75rem, env(safe-area-inset-top))
+          max(0.75rem, env(safe-area-inset-right))
+          max(0.75rem, env(safe-area-inset-bottom))
+          max(0.75rem, env(safe-area-inset-left));
       }
       .viewer-caption { font-size: 0.92rem; padding-top: 0.55rem; }
       .viewer.is-image #viewer-img {
