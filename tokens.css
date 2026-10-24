@@ -20,15 +20,15 @@
   --accent-tangerine: #DD4124;
   --accent-orchid: #B565A7;
 
-  /* Theme card tiles */
-  --tile-electronics: #F4A261;
-  --tile-3dprint: #FF6B9D;
-  --tile-product: #9B6BDB;
-  --tile-woodwork: #C4A484;
-  --tile-drawing: #F5D76E;
-  --tile-stem: #5DADE2;
-  --tile-mech: #6FBF73;
-  --tile-ai: #B565A7;
+  /* Theme card tiles — designer solid plates, left→right, top→bottom */
+  --tile-electronics: #EB9F54;
+  --tile-3dprint: #EC5B92;
+  --tile-product: #9155D9;
+  --tile-woodwork: #56AB68;
+  --tile-drawing: #E3C360;
+  --tile-stem: #74C4E7;
+  --tile-mech: #EB9F53;
+  --tile-ai: #EC5B92;
 
   /* CTA (hero button — coral energy like reference) */
   --cta: #E85A4F;
