@@ -34,6 +34,8 @@
   --tile-3dsoon: #56AB68;
   /* Designer-chairs plate — same purple as the product candy tile */
   --tile-chairs: #9155D9;
+  /* 3D software hub — purple plate baked into card_3d-software.png */
+  --tile-3dsoftware: #9155D9;
 
   /* CTA (hero button — coral energy like reference) */
   --cta: #E85A4F;
@@ -75,6 +77,7 @@
 .tile-esp32 { background: var(--tile-esp32); }
 .tile-3dsoon { background: var(--tile-3dsoon); }
 .tile-chairs { background: var(--tile-chairs); }
+.tile-3dsoftware { background: var(--tile-3dsoftware); }
 
 .card-tile {
   border-radius: var(--radius-lg);
