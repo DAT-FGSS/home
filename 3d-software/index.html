@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3D 建模軟件｜粉嶺官立中學 DAT</title>
+  <style>
+    :root {
+      --bg: #f7f5f1;
+      --card: #fff;
+      --text: #111;
+      --muted: #5a5a5a;
+      --line: #e6e4df;
+      --green: #0A7A4F;
+      --thumb-sc: #1a2740;
+      --thumb-fu: #0b1a33;
+      --thumb-bl: #1a1a1a;
+      --thumb-tk: #EC5B92;
+      --container: 880px;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+    a { color: var(--green); }
+    .nav {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 20;
+    }
+    .nav-inner {
+      width: min(100%, var(--container));
+      margin: 0 auto;
+      padding: 0.85rem 1.25rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 0.75rem;
+      text-decoration: none; color: inherit;
+    }
+    .brand img { width: 56px; height: 56px; object-fit: contain; }
+    .brand-text { display: flex; flex-direction: column; gap: 0.1rem; line-height: 1.25; }
+    .brand-text .school { font-size: 1.05rem; font-weight: 800; }
+    .brand-text .dat { font-size: 0.95rem; font-weight: 800; color: var(--green); }
+    .nav-home {
+      font-weight: 700; color: var(--green);
+      border-bottom: 2px solid var(--green); text-decoration: none;
+      white-space: nowrap;
+    }
+    .page {
+      width: min(100%, var(--container));
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3.5rem;
+    }
+    h1 {
+      font-size: clamp(1.45rem, 3.2vw, 1.9rem);
+      font-weight: 900;
+      margin-bottom: 0.35rem;
+    }
+    .lede { color: var(--muted); margin-bottom: 1.25rem; }
+    .view { display: none; }
+    .view.active { display: block; }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.35rem 1.4rem;
+      margin-bottom: 1.15rem;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+    }
+    .card h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.45rem;
+      border-bottom: 2px solid var(--green);
+    }
+    .article p { margin: 0.75rem 0; text-align: justify; font-size: 1.02rem; }
+    .article ul { margin: 0.5rem 0 0.75rem 1.25rem; font-size: 1.02rem; }
+    .article li { margin: 0.35rem 0; }
+    .callout {
+      background: #eef7f1;
+      border-left: 4px solid var(--green);
+      padding: 0.75rem 1rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+      color: #234;
+    }
+    .callout strong { display: block; margin-bottom: 0.25rem; }
+    .note-muted {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+    figure.pic {
+      margin: 1rem 0;
+      background: #fafafa;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+    figure.pic .row {
+      display: grid; gap: 0.75rem; padding: 0.75rem;
+      align-items: center; justify-items: center;
+      background: #fff;
+    }
+    figure.pic .row.cols-2 { grid-template-columns: 1fr 1fr; }
+    @media (max-width: 640px) {
+      figure.pic .row.cols-2 { grid-template-columns: 1fr; }
+    }
+    figure.pic img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 280px;
+      object-fit: contain;
+      background: #fff;
+    }
+    figure.pic .logo-img { max-height: 140px; padding: 0.75rem; }
+    figure.pic .ui-img { max-height: 260px; }
+    figure.pic figcaption {
+      padding: 0.65rem 0.9rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .look-cap {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 0.3rem;
+    }
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.15rem;
+      margin-top: 0.5rem;
+    }
+    @media (max-width: 720px) {
+      .comp-grid { grid-template-columns: 1fr; }
+    }
+    .comp-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+      cursor: pointer;
+    }
+    .comp-card:hover, .comp-card:focus-visible {
+      transform: translateY(-2px);
+      border-color: var(--green);
+      box-shadow: 0 6px 18px rgba(10,122,79,0.15);
+      outline: none;
+    }
+    .comp-card .thumb {
+      aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      padding: 0.6rem;
+    }
+    .comp-card.solidcraft .thumb { background: var(--thumb-sc); }
+    .comp-card.fusion .thumb { background: var(--thumb-fu); }
+    .comp-card.blender .thumb { background: var(--thumb-bl); }
+    .comp-card.tinkercad .thumb { background: var(--thumb-tk); }
+    .comp-card .thumb img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .comp-card .meta { padding: 0.85rem 1rem 1rem; }
+    .comp-card .meta .num {
+      color: var(--green);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    .comp-card .meta .name {
+      font-weight: 800;
+      font-size: 1.12rem;
+      margin-top: 0.15rem;
+    }
+    .comp-card .meta .en {
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .comp-card .meta .hint {
+      margin-top: 0.45rem;
+      font-size: 0.88rem;
+      color: var(--green);
+      font-weight: 700;
+    }
+    .fact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin: 0.5rem 0 1.15rem;
+    }
+    @media (max-width: 560px) {
+      .fact-grid { grid-template-columns: 1fr; }
+    }
+    .fact {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+    }
+    .fact .label {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: 0.03em;
+    }
+    .fact .value { font-weight: 800; font-size: 1.05rem; margin-top: 0.15rem; }
+    .fact .sub { font-size: 0.85rem; color: var(--muted); margin-top: 0.2rem; }
+    .back-bar {
+      display: flex; gap: 0.65rem; flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .btn {
+      display: inline-block;
+      background: var(--green);
+      color: #fff !important;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      border: 2px solid var(--green);
+      font-size: 0.95rem;
+    }
+    .btn:hover { filter: brightness(1.05); }
+    .btn-ghost {
+      background: #fff;
+      color: var(--green) !important;
+    }
+    .btn-dl {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin: 0.35rem 0.5rem 0.35rem 0;
+    }
+    .detail-title { margin-bottom: 0.1rem; }
+    .detail-en { color: var(--muted); margin-bottom: 1rem; font-weight: 600; }
+    .footer-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+    .link-list { margin: 0.5rem 0 0; }
+    .link-list a { font-weight: 700; }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="https://dat-fgss.github.io/home/" title="返回 DAT 主站">
+        <img src="assets/logo-crest.png" alt="粉嶺官立中學校徽" width="56" height="56" />
+        <span class="brand-text">
+          <span class="school">粉嶺官立中學</span>
+          <span class="dat">設計與應用科技 DAT</span>
+        </span>
+      </a>
+      <a class="nav-home" href="https://dat-fgss.github.io/home/">主頁</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <div id="view-hub" class="view active"></div>
+    <div id="view-detail" class="view"></div>
+  </main>
+
+  <script>
+    const APPS = {
+      solidcraft: {
+        id: 'solidcraft', num: '01', name: 'SolidCraft', en: 'Open-source parametric CAD',
+        cls: 'solidcraft', thumb: 'assets/thumb_solidcraft.jpg',
+        hint: '免費開源 · 參數化 CAD →',
+        logo: 'assets/logo_solidcraft.png',
+        ui: 'assets/ui_solidcraft.jpg',
+        logoCap: '官方標誌（solidcraft.io）',
+        uiCap: '操作介面示意（教學用，非官方截圖）',
+        facts: [
+          { label: '類型', value: '參數化 CAD', sub: '草圖 · 特徵時間軸 · 實體建模' },
+          { label: '授權', value: '免費開源', sub: '以 Rust 編寫 · MIT / Apache-2.0' }
+        ],
+        intro: [
+          'SolidCraft 是<strong>免費開源</strong>、以 <strong>Rust</strong> 編寫的<strong>參數化 CAD</strong>（電腦輔助設計）軟件。使用者可在平面上繪製草圖、加入約束與尺寸，再以拉伸、旋轉等特徵建立實體模型；修改參數後，模型會依特徵時間軸重新運算。',
+          '適合 DAT／STEAM 課堂學習<strong>草圖與特徵建模</strong>的基本概念。可於桌面安裝，亦可在瀏覽器試用，門檻較低。'
+        ],
+        strengths: [
+          '開源免費，適合學校與自學',
+          '參數化工作流程，有助理解尺寸驅動設計',
+          '支援桌面與網頁，方便示範與練習'
+        ],
+        links: [
+          { label: '官方網站／下載', href: 'https://solidcraft.io/' },
+          { label: 'GitHub（tangency-labs/solidcraft）', href: 'https://github.com/tangency-labs/solidcraft' }
+        ]
+      },
+      fusion: {
+        id: 'fusion', num: '02', name: 'Fusion', en: 'Autodesk Fusion（Fusion 360）',
+        cls: 'fusion', thumb: 'assets/thumb_fusion.jpg',
+        hint: 'CAD／CAM／CAE 一體 →',
+        logo: 'assets/logo_fusion.png',
+        ui: 'assets/ui_fusion.jpg',
+        logoCap: '標誌示意（教學用）',
+        uiCap: '操作介面示意（教學用，非官方截圖）',
+        facts: [
+          { label: '類型', value: 'CAD／CAM／CAE', sub: '設計 · 製造 · 模擬一體化' },
+          { label: '學校用途', value: '教育授權常見', sub: '學生／教師常可申請免費教育版' }
+        ],
+        intro: [
+          'Autodesk <strong>Fusion</strong>（前稱 Fusion 360）是業界常用的<strong>雲端協作式</strong>設計軟件，整合 CAD（建模）、CAM（刀具路徑）與 CAE（模擬）等功能。',
+          '適合 DAT 中需要完成<strong>產品設計至製造規劃</strong>的課題。學校與合資格學生通常可申請教育授權，於課堂使用。'
+        ],
+        strengths: [
+          '同一軟件涵蓋建模、工程圖與製造相關工具',
+          '業界使用廣泛，有助銜接進階學習或實習',
+          '教育授權便利學校導入'
+        ],
+        links: [
+          { label: '官方產品頁', href: 'https://www.autodesk.com/products/fusion-360/' },
+          { label: '教育／學生相關資訊（官方）', href: 'https://www.autodesk.com/education/edu-software/overview' }
+        ]
+      },
+      blender: {
+        id: 'blender', num: '03', name: 'Blender', en: 'Open-source 3D creation suite',
+        cls: 'blender', thumb: 'assets/thumb_blender.jpg',
+        hint: '建模 · 動畫 · 渲染 →',
+        logo: 'assets/logo_blender.png',
+        ui: 'assets/ui_blender.jpg',
+        logoCap: '官方標誌（blender.org）',
+        uiCap: '操作介面示意（教學用，非官方截圖）',
+        facts: [
+          { label: '類型', value: '3D 創作套件', sub: '建模 · 材質 · 動畫 · 渲染' },
+          { label: '授權', value: '免費開源', sub: 'GNU GPL · 跨平台' }
+        ],
+        intro: [
+          'Blender 是<strong>免費開源</strong>的 3D 創作軟件，涵蓋多邊形建模、材質、動畫、渲染與簡易合成等功能。',
+          '適合 DAT／視覺設計課題中的<strong>外觀建模、動畫示範與可視化呈現</strong>；與以工程尺寸為主的參數化 CAD 互補。'
+        ],
+        strengths: [
+          '完全免費，功能完整，社區資源豐富',
+          '適合外觀造型、動畫與渲染輸出',
+          '跨 Windows／macOS／Linux，安裝方便'
+        ],
+        links: [
+          { label: '官方下載', href: 'https://www.blender.org/download/' },
+          { label: 'Blender 主頁', href: 'https://www.blender.org/' }
+        ]
+      },
+      tinkercad: {
+        id: 'tinkercad', num: '04', name: 'Tinkercad', en: 'Autodesk Tinkercad（瀏覽器）',
+        cls: 'tinkercad', thumb: 'assets/thumb_tinkercad.jpg',
+        hint: '入門 · 瀏覽器 3D CAD →',
+        logo: 'assets/logo_tinkercad.png',
+        ui: 'assets/ui_tinkercad.jpg',
+        logoCap: '標誌（平面設計師統一風格）',
+        uiCap: '操作介面示意（教學用）',
+        facts: [
+          { label: '類型', value: '入門級 3D CAD', sub: '瀏覽器直接使用 · 無需安裝' },
+          { label: '授權', value: '免費教育產品', sub: 'Autodesk · 適合初中／初學' }
+        ],
+        intro: [
+          'Tinkercad 是 Autodesk 提供的<strong>免費、以瀏覽器運作為主</strong>的入門級 3D CAD 工具，介面簡易，適合學生首次接觸立體建模。',
+          '同學可透過基本立體組合、尺寸調整與簡單電路／編程相關模組，完成初階產品模型，適合<strong>初中或 DAT 入門課</strong>建立信心後，再銜接 Fusion、SolidCraft 或 Blender。'
+        ],
+        strengths: [
+          '無需安裝，課堂電腦或 Chromebook 即可使用',
+          '操作門檻低，適合初學者與低年級',
+          '與 Autodesk 教育生態銜接，可作為 Fusion 前導'
+        ],
+        links: [
+          { label: '官方網站（Tinkercad）', href: 'https://www.tinkercad.com/' }
+        ]
+      }
+
+    };
+
+    const hubEl = document.getElementById('view-hub');
+    const detailEl = document.getElementById('view-detail');
+
+    function esc(s) {
+      return String(s || '').replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      })[c]);
+    }
+
+    function cardHtml(p) {
+      return (
+        '<a class="comp-card ' + esc(p.cls) + '" href="#/app/' + esc(p.id) + '">' +
+          '<div class="thumb"><img src="' + esc(p.thumb) + '" alt="' + esc(p.name) + '" /></div>' +
+          '<div class="meta">' +
+            '<div class="num">' + esc(p.num) + '</div>' +
+            '<div class="name">' + esc(p.name) + '</div>' +
+            '<div class="en">' + esc(p.en) + '</div>' +
+            '<div class="hint">' + esc(p.hint) + '</div>' +
+          '</div>' +
+        '</a>'
+      );
+    }
+
+    function factsHtml(items) {
+      return '<div class="fact-grid">' + items.map(f =>
+        '<div class="fact">' +
+          '<div class="label">' + esc(f.label) + '</div>' +
+          '<div class="value">' + esc(f.value) + '</div>' +
+          (f.sub ? '<div class="sub">' + esc(f.sub) + '</div>' : '') +
+        '</div>'
+      ).join('') + '</div>';
+    }
+
+    function renderHub() {
+      hubEl.innerHTML =
+        '<h1>3D 建模軟件</h1>' +
+        '<p class="lede">粉嶺官立中學 · 設計與應用科技（DAT）</p>' +
+        '<section class="card">' +
+          '<h2>簡介</h2>' +
+          '<div class="article">' +
+            '<p>本頁介紹四款常用於 DAT／STEAM 課堂的 <strong>3D 建模相關軟件</strong>，方便同學認識用途、介面與下載途徑。</p>' +
+            '<ul>' +
+              '<li><strong>SolidCraft</strong> — 免費開源參數化 CAD（Rust）</li>' +
+              '<li><strong>Fusion</strong> — Autodesk 一體化 CAD／CAM／CAE</li>' +
+              '<li><strong>Blender</strong> — 免費開源 3D 建模／動畫／渲染</li>' +
+              '<li><strong>Tinkercad</strong> — 瀏覽器入門 3D CAD（Autodesk 教育）</li>' +
+            '</ul>' +
+            '<div class="callout"><strong>使用方式</strong>按下方卡片進入各軟件詳情；同頁切換，可隨時返回目錄。下載請以官方連結為準。</div>' +
+          '</div>' +
+        '</section>' +
+        '<section class="card">' +
+          '<h2>四款軟件</h2>' +
+          '<div class="comp-grid">' +
+            cardHtml(APPS.solidcraft) +
+            cardHtml(APPS.fusion) +
+            cardHtml(APPS.blender) +
+            cardHtml(APPS.tinkercad) +
+          '</div>' +
+        '</section>' +
+        '<p class="footer-note">SolidCraft／Blender 標誌取自官方；Tinkercad 素材由平面設計師統一風格；Fusion 標誌與部分介面為教學示意</p>';
+    }
+
+    function renderApp(p) {
+      const paras = p.intro.map(html => '<p>' + html + '</p>').join('');
+      const strengths = '<ul>' + p.strengths.map(s => '<li>' + s + '</li>').join('') + '</ul>';
+      const links = p.links.map(l =>
+        '<a class="btn btn-dl" href="' + esc(l.href) + '" target="_blank" rel="noopener noreferrer">' + esc(l.label) + ' ↗</a>'
+      ).join('');
+      return (
+        factsHtml(p.facts) +
+        '<section class="card"><h2>簡介</h2><div class="article">' +
+          paras +
+          '<p><strong>主要特點：</strong></p>' + strengths +
+          '<div class="callout"><strong>課堂提示</strong>參數化 CAD（如 SolidCraft、Fusion）偏重尺寸與工程特徵；Blender 偏重外觀、動畫與視覺呈現。可按課題選用。</div>' +
+        '</div></section>' +
+        '<section class="card"><h2>標誌與操作介面</h2>' +
+          '<figure class="pic"><div class="row cols-2">' +
+            '<div><img class="logo-img" src="' + esc(p.logo) + '" alt="' + esc(p.name) + ' 標誌" /><div class="look-cap">' + esc(p.logoCap) + '</div></div>' +
+            '<div><img class="ui-img" src="' + esc(p.ui) + '" alt="' + esc(p.name) + ' 介面示意" /><div class="look-cap">' + esc(p.uiCap) + '</div></div>' +
+          '</div><figcaption>左：標誌　右：操作版面示意（方便課堂辨識；正式介面以軟件實際版本為準）</figcaption></figure>' +
+          '<p class="note-muted">商標與軟件名稱分屬各開發商／社群；本頁僅作教學介紹。</p>' +
+        '</section>' +
+        '<section class="card"><h2>下載／官方連結</h2><div class="article">' +
+          '<p>請透過官方網站取得安裝檔或教育授權，避免使用來路不明的安裝包。</p>' +
+          '<div class="link-list">' + links + '</div>' +
+        '</div></section>'
+      );
+    }
+
+    function renderDetail(id) {
+      const p = APPS[id];
+      if (!p) { location.hash = '#/'; return; }
+      detailEl.innerHTML =
+        '<div class="back-bar">' +
+          '<a class="btn" href="#/">← 返回目錄</a>' +
+          '<a class="btn btn-ghost" href="https://dat-fgss.github.io/home/">DAT 主站</a>' +
+        '</div>' +
+        '<h1 class="detail-title">' + esc(p.name) + '</h1>' +
+        '<p class="detail-en">' + esc(p.en) + ' · ' + esc(p.num) + '</p>' +
+        renderApp(p) +
+        '<div class="back-bar" style="margin-top:0.5rem">' +
+          '<a class="btn" href="#/">← 返回目錄</a>' +
+        '</div>';
+    }
+
+    function route() {
+      const h = (location.hash || '#/').replace(/^#/, '') || '/';
+      const m = h.match(/^\/app\/([a-z0-9-]+)/i);
+      if (m && APPS[m[1].toLowerCase()]) {
+        hubEl.classList.remove('active');
+        detailEl.classList.add('active');
+        renderDetail(m[1].toLowerCase());
+        window.scrollTo(0, 0);
+      } else {
+        detailEl.classList.remove('active');
+        hubEl.classList.add('active');
+        if (!hubEl.dataset.ready) {
+          renderHub();
+          hubEl.dataset.ready = '1';
+        }
+        window.scrollTo(0, 0);
+      }
+    }
+
+    window.addEventListener('hashchange', route);
+    renderHub();
+    hubEl.dataset.ready = '1';
+    route();
+  </script>
+</body>
+</html>
