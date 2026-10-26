@@ -7,20 +7,19 @@
     playing: false,
     paused: false,
     noteIndex: 0,
-    timer: null,
+    sectionIndex: 0,
     bpm: 90,
     showScore: true,
-    muted: false
+    muted: false,
+    schedule: null,
+    rafId: null,
+    visualCursor: 0
   };
-
-  var els = {};
 
   function $(id) { return document.getElementById(id); }
 
   function tineHeightPct(id) {
-    // Longest at center (9,10), shorter outward
     var dist = Math.min(Math.abs(id - 9), Math.abs(id - 10));
-    // id 9,10 → dist 0 → 96%; edge dist ~8 → 42%
     return 96 - dist * 6.5;
   }
 
@@ -44,15 +43,18 @@
       btn.appendChild(lab);
       btn.addEventListener("pointerdown", function (e) {
         e.preventDefault();
-        strikeKey(k.note, true);
+        window.KalimbaAudio.ensure().then(function () {
+          strikeKey(k.note, true);
+        });
       });
       root.appendChild(btn);
     });
   }
 
   function strikeKey(note, fromUser) {
-    if (fromUser) window.KalimbaAudio.ensure();
-    window.KalimbaAudio.playNote(note);
+    if (fromUser) {
+      window.KalimbaAudio.playNote(note);
+    }
     var btn = document.querySelector('.tine[data-note="' + note + '"]');
     if (!btn) return;
     btn.classList.remove("pressed");
@@ -67,6 +69,39 @@
   function currentSong() {
     for (var i = 0; i < SONGS.length; i++) if (SONGS[i].id === state.songId) return SONGS[i];
     return SONGS[0];
+  }
+
+  /** Split song notes into bars (sections) by song.bar beat length. */
+  function getSections(song) {
+    var barLen = song.bar || 4;
+    var sections = [];
+    var cur = [];
+    var acc = 0;
+    song.notes.forEach(function (ev, idx) {
+      if (acc >= barLen - 0.001 && cur.length) {
+        sections.push(cur);
+        cur = [];
+        acc = 0;
+      }
+      cur.push({ ev: ev, idx: idx });
+      acc += ev.d;
+    });
+    if (cur.length) sections.push(cur);
+    return sections;
+  }
+
+  function sectionCount() {
+    return getSections(currentSong()).length;
+  }
+
+  function sectionForNoteIndex(noteIdx) {
+    var sections = getSections(currentSong());
+    for (var s = 0; s < sections.length; s++) {
+      var first = sections[s][0].idx;
+      var last = sections[s][sections[s].length - 1].idx;
+      if (noteIdx >= first && noteIdx <= last) return s;
+    }
+    return 0;
   }
 
   function fillSongSelect() {
@@ -90,6 +125,21 @@
     return { j: key.jianpu, hi: hi, lo: lo };
   }
 
+  function noteCellHtml(ev) {
+    if (!ev.n) {
+      return '<span class="dot-high"></span><span class="jianpu">0</span><span class="dot-low"></span><span class="solfa"></span><span class="key-num">休止</span>';
+    }
+    var k = window.KALIMBA.byNote[ev.n];
+    var jp = jianpuHtml(k);
+    return (
+      '<span class="dot-high">' + jp.hi + "</span>" +
+      '<span class="jianpu">' + jp.j + "</span>" +
+      '<span class="dot-low">' + jp.lo + "</span>" +
+      '<span class="solfa">' + (k ? k.solfa : "") + "</span>" +
+      '<span class="key-num">鍵' + (k ? k.id : "?") + "・" + ev.n + "</span>"
+    );
+  }
+
   function renderScore() {
     var song = currentSong();
     $("scoreTitle").textContent = song.title;
@@ -97,38 +147,22 @@
 
     var scroll = $("scoreRow");
     scroll.innerHTML = "";
-    var barLen = song.bar || 4;
-    var acc = 0;
-    var barEl = document.createElement("div");
-    barEl.className = "score-bar";
+    var sections = getSections(song);
 
-    song.notes.forEach(function (ev, idx) {
-      if (acc >= barLen - 0.001) {
-        scroll.appendChild(barEl);
-        barEl = document.createElement("div");
-        barEl.className = "score-bar";
-        acc = 0;
-      }
-      var noteEl = document.createElement("div");
-      noteEl.className = "score-note" + (ev.n ? "" : " rest");
-      noteEl.dataset.idx = String(idx);
-      if (!ev.n) {
-        noteEl.innerHTML = '<span class="dot-high"></span><span class="jianpu">0</span><span class="dot-low"></span><span class="key-num">休止</span>';
-      } else {
-        var k = window.KALIMBA.byNote[ev.n];
-        var jp = jianpuHtml(k);
-        noteEl.innerHTML =
-          '<span class="dot-high">' + jp.hi + "</span>" +
-          '<span class="jianpu">' + jp.j + "</span>" +
-          '<span class="dot-low">' + jp.lo + "</span>" +
-          '<span class="solfa">' + (k ? k.solfa : "") + "</span>" +
-          '<span class="key-num">鍵' + (k ? k.id : "?") + "・" + ev.n + "</span>";
-      }
-      barEl.appendChild(noteEl);
-      acc += ev.d;
+    sections.forEach(function (sec) {
+      var barEl = document.createElement("div");
+      barEl.className = "score-bar";
+      sec.forEach(function (item) {
+        var noteEl = document.createElement("div");
+        noteEl.className = "score-note" + (item.ev.n ? "" : " rest");
+        noteEl.dataset.idx = String(item.idx);
+        noteEl.innerHTML = noteCellHtml(item.ev);
+        barEl.appendChild(noteEl);
+      });
+      scroll.appendChild(barEl);
     });
-    if (barEl.childNodes.length) scroll.appendChild(barEl);
-    highlightScore(-1);
+    highlightScore(state.playing || state.paused ? state.noteIndex : -1);
+    renderSectionOverlay();
   }
 
   function highlightScore(idx) {
@@ -142,62 +176,163 @@
     if (cur && state.showScore) {
       cur.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     }
+    // Sync overlay highlight
+    var oNodes = document.querySelectorAll(".section-note");
+    oNodes.forEach(function (el) {
+      var i = parseInt(el.dataset.idx, 10);
+      el.classList.toggle("current", i === idx);
+      el.classList.toggle("played", idx >= 0 && i < idx);
+    });
   }
 
-  function beatMs() {
-    return 60000 / state.bpm;
+  function renderSectionOverlay() {
+    var song = currentSong();
+    var sections = getSections(song);
+    var total = sections.length || 1;
+    if (state.sectionIndex < 0) state.sectionIndex = 0;
+    if (state.sectionIndex >= total) state.sectionIndex = total - 1;
+
+    var label = $("sectionLabel");
+    if (label) label.textContent = "第 " + (state.sectionIndex + 1) + "／" + total + " 節";
+
+    var row = $("sectionRow");
+    if (!row) return;
+    row.innerHTML = "";
+    var sec = sections[state.sectionIndex] || [];
+    sec.forEach(function (item) {
+      var noteEl = document.createElement("div");
+      noteEl.className = "section-note score-note" + (item.ev.n ? "" : " rest");
+      noteEl.dataset.idx = String(item.idx);
+      noteEl.innerHTML = noteCellHtml(item.ev);
+      row.appendChild(noteEl);
+    });
+
+    var hi = state.playing || state.paused ? state.noteIndex : -1;
+    row.querySelectorAll(".section-note").forEach(function (el) {
+      var i = parseInt(el.dataset.idx, 10);
+      el.classList.toggle("current", i === hi);
+      el.classList.toggle("played", hi >= 0 && i < hi);
+    });
+
+    var prev = $("btnSecPrev");
+    var next = $("btnSecNext");
+    if (prev) prev.disabled = state.sectionIndex <= 0;
+    if (next) next.disabled = state.sectionIndex >= total - 1;
+  }
+
+  function setSection(idx) {
+    var total = sectionCount();
+    state.sectionIndex = Math.max(0, Math.min(total - 1, idx));
+    renderSectionOverlay();
+  }
+
+  function cancelVisualLoop() {
+    if (state.rafId) {
+      cancelAnimationFrame(state.rafId);
+      state.rafId = null;
+    }
   }
 
   function stopPlayback(resetIndex) {
     state.playing = false;
     state.paused = false;
-    if (state.timer) {
-      clearTimeout(state.timer);
-      state.timer = null;
+    cancelVisualLoop();
+    if (state.schedule) {
+      try { state.schedule.cancel(); } catch (e) { /* ignore */ }
+      state.schedule = null;
     }
+    window.KalimbaAudio.stopAll();
     if (resetIndex) {
       state.noteIndex = 0;
+      state.visualCursor = 0;
+      state.sectionIndex = 0;
       highlightScore(-1);
+      renderSectionOverlay();
     }
     updateTransportUI();
   }
 
-  function playStep() {
-    if (!state.playing || state.paused) return;
+  function runVisualLoop() {
+    if (!state.playing || state.paused || !state.schedule) return;
+    var now = window.KalimbaAudio.currentTime();
+    var times = state.schedule.times;
     var song = currentSong();
-    if (state.noteIndex >= song.notes.length) {
-      stopPlayback(true);
-      $("statusLine").innerHTML = "狀態：<strong>播放完畢</strong>　《" + song.title + "》";
-      return;
+
+    while (
+      state.visualCursor < times.length &&
+      now >= times[state.visualCursor].time - 0.02
+    ) {
+      var item = times[state.visualCursor];
+      state.noteIndex = item.index;
+      var sec = sectionForNoteIndex(item.index);
+      if (sec !== state.sectionIndex) {
+        state.sectionIndex = sec;
+        renderSectionOverlay();
+      }
+      highlightScore(item.index);
+      if (item.note) strikeKey(item.note, false);
+      $("statusLine").innerHTML =
+        "狀態：<strong>播放中</strong>　《" + song.title + "》　第 " +
+        (item.index + 1) + "／" + song.notes.length + " 音　｜　第 " +
+        (state.sectionIndex + 1) + "／" + sectionCount() + " 節";
+      state.visualCursor += 1;
     }
-    var ev = song.notes[state.noteIndex];
-    highlightScore(state.noteIndex);
-    if (ev.n) strikeKey(ev.n, false);
-    $("statusLine").innerHTML =
-      "狀態：<strong>播放中</strong>　《" + song.title + "》　第 " +
-      (state.noteIndex + 1) + "／" + song.notes.length + " 音";
-    var wait = ev.d * beatMs();
-    state.noteIndex += 1;
-    state.timer = setTimeout(playStep, wait);
+
+    if (state.visualCursor >= times.length) {
+      if (now >= state.schedule.endTime - 0.05) {
+        stopPlayback(true);
+        $("statusLine").innerHTML = "狀態：<strong>播放完畢</strong>　《" + song.title + "》";
+        return;
+      }
+    }
+
+    state.rafId = requestAnimationFrame(runVisualLoop);
   }
 
   function startPlay() {
-    window.KalimbaAudio.ensure();
-    var song = currentSong();
-    if (state.noteIndex >= song.notes.length) state.noteIndex = 0;
-    state.playing = true;
-    state.paused = false;
-    updateTransportUI();
-    playStep();
+    window.KalimbaAudio.ensure().then(function () {
+      var song = currentSong();
+      if (state.noteIndex >= song.notes.length) {
+        state.noteIndex = 0;
+        state.sectionIndex = 0;
+      }
+      // Align section to current note
+      state.sectionIndex = sectionForNoteIndex(state.noteIndex);
+      renderSectionOverlay();
+
+      state.playing = true;
+      state.paused = false;
+      updateTransportUI();
+
+      state.schedule = window.KalimbaAudio.scheduleSong(
+        song.notes,
+        state.bpm,
+        state.noteIndex
+      );
+      state.visualCursor = 0;
+      $("statusLine").innerHTML =
+        "狀態：<strong>播放中</strong>　《" + song.title + "》";
+      cancelVisualLoop();
+      state.rafId = requestAnimationFrame(runVisualLoop);
+    });
   }
 
   function pausePlay() {
     if (!state.playing) return;
     state.paused = true;
-    if (state.timer) {
-      clearTimeout(state.timer);
-      state.timer = null;
+    state.playing = false;
+    cancelVisualLoop();
+    // Advance noteIndex to next unplayed note for resume
+    if (state.schedule && state.visualCursor < state.schedule.times.length) {
+      state.noteIndex = state.schedule.times[state.visualCursor].index;
+    } else if (state.schedule && state.visualCursor >= state.schedule.times.length) {
+      state.noteIndex = currentSong().notes.length;
     }
+    if (state.schedule) {
+      try { state.schedule.cancel(); } catch (e) { /* ignore */ }
+      state.schedule = null;
+    }
+    window.KalimbaAudio.stopAll();
     $("statusLine").innerHTML = "狀態：<strong>已暫停</strong>　《" + currentSong().title + "》";
     updateTransportUI();
   }
@@ -205,7 +340,13 @@
   function updateTransportUI() {
     $("btnPlay").disabled = state.playing && !state.paused;
     $("btnPause").disabled = !state.playing || state.paused;
-    $("btnStop").disabled = !state.playing && state.noteIndex === 0;
+    $("btnStop").disabled = !state.playing && !state.paused && state.noteIndex === 0;
+    var navLock = state.playing && !state.paused;
+    var prev = $("btnSecPrev");
+    var next = $("btnSecNext");
+    var total = sectionCount();
+    if (prev) prev.disabled = navLock || state.sectionIndex <= 0;
+    if (next) next.disabled = navLock || state.sectionIndex >= total - 1;
   }
 
   function setShowScore(on) {
@@ -237,19 +378,26 @@
     });
   }
 
+  function bindUnlockGestures() {
+    var unlock = function () {
+      window.KalimbaAudio.ensure();
+    };
+    document.addEventListener("pointerdown", unlock, { passive: true });
+    document.addEventListener("touchstart", unlock, { passive: true });
+    document.addEventListener("click", unlock, { passive: true });
+  }
+
   function bind() {
     $("songSelect").addEventListener("change", function () {
       stopPlayback(true);
       state.songId = this.value;
+      state.sectionIndex = 0;
       renderScore();
       $("statusLine").innerHTML = "狀態：<strong>已選曲</strong>　《" + currentSong().title + "》　可按播放或點琴鍵練習";
     });
     $("btnPlay").addEventListener("click", function () {
       if (state.paused) {
-        state.paused = false;
-        state.playing = true;
-        updateTransportUI();
-        playStep();
+        startPlay();
       } else {
         startPlay();
       }
@@ -268,17 +416,35 @@
     $("tempo").addEventListener("input", function () {
       state.bpm = parseInt(this.value, 10);
       $("tempoVal").textContent = String(state.bpm);
+      // If playing, restart schedule from current visual note for new tempo
+      if (state.playing && !state.paused) {
+        if (state.schedule && state.visualCursor < state.schedule.times.length) {
+          state.noteIndex = state.schedule.times[state.visualCursor].index;
+        }
+        stopPlayback(false);
+        state.paused = false;
+        startPlay();
+      }
+    });
+    $("btnSecPrev").addEventListener("click", function () {
+      if (state.playing) return;
+      setSection(state.sectionIndex - 1);
+    });
+    $("btnSecNext").addEventListener("click", function () {
+      if (state.playing) return;
+      setSection(state.sectionIndex + 1);
     });
   }
 
   function init() {
-    els = {};
     buildKalimba();
     fillSongSelect();
     buildLegend();
+    bindUnlockGestures();
     bind();
     setShowScore(true);
     setMuted(false);
+    state.sectionIndex = 0;
     renderScore();
     updateTransportUI();
     $("tempoVal").textContent = String(state.bpm);
