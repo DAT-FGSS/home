@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZXF6ZBGWE7"></script>
+  <script src="../analytics.js"></script>
+  <title>18 音拇指琴模擬器｜粉嶺官立中學</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <img src="assets/logo-crest.png" alt="粉嶺官立中學校徽" width="56" height="56" />
+        <span class="brand-text">
+          <span class="school">粉嶺官立中學</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <h1>18 音拇指琴模擬器</h1>
+    <p class="lede">面向使用者的琴鍵視圖；可手動彈奏，亦可選預設歌曲模擬演奏。支援有聲／靜音，並可顯示簡譜曲譜對照琴鍵編號。</p>
+
+    <section class="panel" aria-label="播放控制">
+      <h2>選曲與控制</h2>
+      <div class="controls">
+        <label>歌曲
+          <select id="songSelect" aria-label="選擇歌曲"></select>
+        </label>
+        <label>速度（BPM）
+          <span style="display:flex;align-items:center;gap:0.4rem;">
+            <input type="range" id="tempo" min="50" max="140" value="90" aria-valuemin="50" aria-valuemax="140" />
+            <span class="tempo-val" id="tempoVal">90</span>
+          </span>
+        </label>
+      </div>
+      <div class="btn-row" style="margin-top:0.75rem;">
+        <button type="button" class="btn" id="btnPlay">播放</button>
+        <button type="button" class="btn secondary" id="btnPause">暫停</button>
+        <button type="button" class="btn secondary" id="btnStop">停止</button>
+        <button type="button" class="btn secondary toggle" id="btnMute" aria-pressed="false">靜音</button>
+        <button type="button" class="btn secondary toggle on" id="btnScore" aria-pressed="true">隱藏曲譜</button>
+      </div>
+      <p class="status-line" id="statusLine">狀態：就緒</p>
+    </section>
+
+    <section class="panel score-panel visible" id="scorePanel" aria-label="曲譜">
+      <h2>曲譜（簡譜）</h2>
+      <div class="score-title" id="scoreTitle"></div>
+      <div class="score-meta" id="scoreMeta"></div>
+      <div class="score-scroll">
+        <div class="score-row" id="scoreRow"></div>
+      </div>
+      <p class="score-legend">
+        說明：數字為簡譜唱名（1=do … 7=ti，1=C）；上方「●」表示高八度；下方標「鍵號・音名」對應琴上標籤。播放時綠色框為當前音。
+      </p>
+    </section>
+
+    <section class="kalimba-wrap" aria-label="拇指琴">
+      <p class="kalimba-hint">琴鍵面向你（俯視）・最長音片在中央・點擊或觸控即可彈奏</p>
+      <div class="kalimba" id="kalimba">
+        <div class="kalimba-body" aria-hidden="true">
+          <div class="kalimba-soundhole"></div>
+        </div>
+        <div class="kalimba-bridge" aria-hidden="true"></div>
+        <div class="tines" id="tines"></div>
+      </div>
+    </section>
+
+    <section class="panel legend-panel">
+      <details open>
+        <summary>琴鍵對照表（18 音・C 大調）</summary>
+        <table class="map-table">
+          <thead>
+            <tr><th>鍵號</th><th>音名</th><th>簡譜</th><th>唱名</th></tr>
+          </thead>
+          <tbody id="mapBody"></tbody>
+        </table>
+        <p class="score-legend" style="border:0;padding-top:0.75rem;">
+          調音：C 大調教學用 18 鍵。視覺由左至右為鍵 1→18；中央最長為 C4（鍵 9）與 E4（鍵 10），向外漸短、音高大致向外升高（左外側偏高、右外側偏高）。詳見 PREVIEW.md。
+        </p>
+      </details>
+    </section>
+
+    <p class="footer-note">粉嶺官立中學　｜　本頁為課堂預覽，音效以網頁合成，無版權取樣</p>
+  </main>
+
+  <script src="js/notes.js"></script>
+  <script src="js/songs.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
