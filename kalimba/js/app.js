@@ -172,23 +172,22 @@
     renderSectionOverlay();
   }
 
-  function highlightScore(idx) {
-    var nodes = document.querySelectorAll(".score-note");
-    nodes.forEach(function (el) {
+  function paintNoteState(nodes, idx) {
+    for (var n = 0; n < nodes.length; n++) {
+      var el = nodes[n];
       var i = parseInt(el.dataset.idx, 10);
       el.classList.toggle("current", i === idx);
       el.classList.toggle("played", idx >= 0 && i < idx);
-    });
-    var cur = document.querySelector('.score-note[data-idx="' + idx + '"]');
-    if (cur && state.showScore) {
-      cur.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     }
-    var oNodes = document.querySelectorAll(".section-note");
-    oNodes.forEach(function (el) {
-      var i = parseInt(el.dataset.idx, 10);
-      el.classList.toggle("current", i === idx);
-      el.classList.toggle("played", idx >= 0 && i < idx);
-    });
+  }
+
+  function highlightScore(idx) {
+    // Static score: highlight only. Never scrollIntoView or focus —
+    // on a phone that pulls the viewport off the kalimba and back to the sheet.
+    var panel = $("scorePanel");
+    if (panel) paintNoteState(panel.querySelectorAll(".score-note"), idx);
+    var row = $("sectionRow");
+    if (row) paintNoteState(row.querySelectorAll(".section-note"), idx);
   }
 
   function renderSectionOverlay() {
