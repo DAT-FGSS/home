@@ -46,6 +46,7 @@
         <button type="button" class="btn secondary toggle on" id="btnScore" aria-pressed="true">隱藏曲譜</button>
       </div>
       <p class="status-line" id="statusLine">狀態：就緒</p>
+      <p class="mobile-audio-tip" id="mobileAudioTip">手機請先點琴鍵或播放；若仍無聲，關掉機側靜音鍵並調高音量。</p>
     </section>
 
     <section class="panel score-panel visible" id="scorePanel" aria-label="曲譜">
@@ -70,6 +71,14 @@
         </div>
         <div class="section-row" id="sectionRow"></div>
         <p class="section-hint">琴上只顯示一節（一小節）樂譜；播放時自動換節，亦可手動翻節練習。</p>
+      </div>
+      <div class="near-transport" id="nearTransport" aria-label="琴旁播放控制">
+        <span class="near-transport-label">琴旁控制</span>
+        <div class="near-transport-btns">
+          <button type="button" class="btn near-btn" id="btnPlayNear">播放</button>
+          <button type="button" class="btn secondary near-btn" id="btnPauseNear">暫停</button>
+          <button type="button" class="btn secondary near-btn" id="btnStopNear">停止</button>
+        </div>
       </div>
       <div class="kalimba" id="kalimba">
         <div class="kalimba-body" aria-hidden="true">
