@@ -18,6 +18,7 @@
   --radius: 12px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { overflow-anchor: none; }
 body {
   font-family: "Segoe UI", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
   background: var(--bg);
@@ -45,12 +46,24 @@ a { color: var(--green); }
   margin: 0 auto;
   padding: 0.85rem 1.25rem;
   display: flex; align-items: center;
-  gap: 1rem; flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem 1rem; flex-wrap: wrap;
 }
 .brand {
   display: flex; align-items: center; gap: 0.75rem;
   color: inherit;
 }
+.nav-home {
+  margin-left: auto;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--green);
+  text-decoration: none;
+  border-bottom: 2px solid var(--green);
+  padding-bottom: 0.1rem;
+  white-space: nowrap;
+}
+.nav-home:hover { opacity: 0.85; }
 .brand img { width: 56px; height: 56px; object-fit: contain; }
 .brand-text { display: flex; flex-direction: column; gap: 0.1rem; line-height: 1.25; }
 .brand-text .school { font-size: 1.05rem; font-weight: 800; }
@@ -116,7 +129,7 @@ button.btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .status-line strong { color: var(--green); }
 
 /* Score panel */
-.score-panel { display: none; }
+.score-panel { display: none; overflow-anchor: none; }
 .score-panel.visible { display: block; }
 .score-title {
   font-size: 1rem; font-weight: 800; margin-bottom: 0.35rem;
@@ -139,8 +152,13 @@ button.btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .score-note {
   display: flex; flex-direction: column; align-items: center;
   min-width: 1.7rem; padding: 0.25rem 0.2rem;
-  border-radius: 6px; transition: background 0.12s, transform 0.12s;
+  border-radius: 6px; transition: background 0.12s;
   cursor: default;
+  overflow-anchor: none;
+}
+#scorePanel .score-note {
+  pointer-events: none;
+  user-select: none;
 }
 .score-note .jianpu {
   font-size: 1.35rem; font-weight: 900; line-height: 1.1;
@@ -160,7 +178,6 @@ button.btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .score-note.current {
   background: var(--tine-glow);
   box-shadow: 0 0 0 2px var(--green);
-  transform: translateY(-2px);
 }
 .score-note.played { opacity: 0.55; }
 .score-legend {
@@ -326,6 +343,7 @@ button.btn:disabled { opacity: 0.45; cursor: not-allowed; }
   padding: 0.65rem 0.75rem 0.7rem;
   margin: 0 auto 0.85rem;
   width: min(100%, 720px);
+  overflow-anchor: none;
 }
 .section-toolbar {
   display: flex;
@@ -349,15 +367,19 @@ button.btn.section-nav {
 }
 .section-row {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-wrap: nowrap;
+  justify-content: safe center;
   align-items: flex-end;
   gap: 0.35rem 0.45rem;
-  min-height: 3.4rem;
+  min-height: 4.6rem;
   padding: 0.35rem 0.15rem;
   background: #fff;
   border-radius: 8px;
   border: 1px solid var(--line);
+  overflow-x: auto;
+  overflow-y: hidden;
+  overflow-anchor: none;
+  -webkit-overflow-scrolling: touch;
 }
 .section-note {
   min-width: 2rem;
