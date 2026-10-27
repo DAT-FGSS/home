@@ -62,6 +62,15 @@
 
     <section class="kalimba-wrap" aria-label="拇指琴">
       <p class="kalimba-hint">琴鍵面向你（俯視）・最長音片在中央・點擊或觸控即可彈奏</p>
+      <div class="section-overlay" id="sectionOverlay" aria-label="本節曲譜">
+        <div class="section-toolbar">
+          <button type="button" class="btn secondary section-nav" id="btnSecPrev" aria-label="上一節">‹ 上一節</button>
+          <span class="section-label" id="sectionLabel">第 1／1 節</span>
+          <button type="button" class="btn secondary section-nav" id="btnSecNext" aria-label="下一節">下一節 ›</button>
+        </div>
+        <div class="section-row" id="sectionRow"></div>
+        <p class="section-hint">琴上只顯示一節（一小節）樂譜；播放時自動換節，亦可手動翻節練習。</p>
+      </div>
       <div class="kalimba" id="kalimba">
         <div class="kalimba-body" aria-hidden="true">
           <div class="kalimba-soundhole"></div>
