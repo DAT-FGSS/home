@@ -13,7 +13,8 @@
     muted: false,
     schedule: null,
     rafId: null,
-    visualCursor: 0
+    visualCursor: 0,
+    playGeneration: 0
   };
 
   function $(id) { return document.getElementById(id); }
@@ -41,11 +42,17 @@
       lab.innerHTML = '<span class="note">' + k.note + '</span><span class="num">' + k.id + "</span>";
       btn.appendChild(bar);
       btn.appendChild(lab);
+      // Sync unlock + playNote on the SAME gesture stack (iOS Safari).
       btn.addEventListener("pointerdown", function (e) {
         e.preventDefault();
-        window.KalimbaAudio.ensure().then(function () {
-          strikeKey(k.note, true);
-        });
+        window.KalimbaAudio.unlockSync();
+        strikeKey(k.note, true);
+        // If resume was still pending, re-trigger once running.
+        if (!window.KalimbaAudio.isRunning()) {
+          window.KalimbaAudio.whenRunning(function () {
+            window.KalimbaAudio.playNote(k.note);
+          });
+        }
       });
       root.appendChild(btn);
     });
@@ -176,7 +183,6 @@
     if (cur && state.showScore) {
       cur.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     }
-    // Sync overlay highlight
     var oNodes = document.querySelectorAll(".section-note");
     oNodes.forEach(function (el) {
       var i = parseInt(el.dataset.idx, 10);
@@ -234,6 +240,7 @@
   }
 
   function stopPlayback(resetIndex) {
+    state.playGeneration += 1;
     state.playing = false;
     state.paused = false;
     cancelVisualLoop();
@@ -289,40 +296,59 @@
     state.rafId = requestAnimationFrame(runVisualLoop);
   }
 
+  function beginScheduleFromCurrent() {
+    var song = currentSong();
+    if (state.noteIndex >= song.notes.length) {
+      state.noteIndex = 0;
+      state.sectionIndex = 0;
+    }
+    state.sectionIndex = sectionForNoteIndex(state.noteIndex);
+    renderSectionOverlay();
+
+    state.playing = true;
+    state.paused = false;
+    updateTransportUI();
+
+    if (state.schedule) {
+      try { state.schedule.cancel(); } catch (e) { /* ignore */ }
+    }
+    window.KalimbaAudio.stopAll();
+
+    state.schedule = window.KalimbaAudio.scheduleSong(
+      song.notes,
+      state.bpm,
+      state.noteIndex
+    );
+    state.visualCursor = 0;
+    $("statusLine").innerHTML =
+      "狀態：<strong>播放中</strong>　《" + song.title + "》";
+    cancelVisualLoop();
+    state.rafId = requestAnimationFrame(runVisualLoop);
+  }
+
   function startPlay() {
-    window.KalimbaAudio.ensure().then(function () {
-      var song = currentSong();
-      if (state.noteIndex >= song.notes.length) {
-        state.noteIndex = 0;
-        state.sectionIndex = 0;
-      }
-      // Align section to current note
-      state.sectionIndex = sectionForNoteIndex(state.noteIndex);
-      renderSectionOverlay();
+    // Gesture stack: unlock sync, then schedule immediately (not only in .then).
+    window.KalimbaAudio.unlockSync();
+    var gen = ++state.playGeneration;
 
-      state.playing = true;
-      state.paused = false;
-      updateTransportUI();
+    beginScheduleFromCurrent();
 
-      state.schedule = window.KalimbaAudio.scheduleSong(
-        song.notes,
-        state.bpm,
-        state.noteIndex
-      );
-      state.visualCursor = 0;
-      $("statusLine").innerHTML =
-        "狀態：<strong>播放中</strong>　《" + song.title + "》";
-      cancelVisualLoop();
-      state.rafId = requestAnimationFrame(runVisualLoop);
-    });
+    // If context was not running yet, reschedule once it is (iOS resume race).
+    if (!window.KalimbaAudio.isRunning()) {
+      window.KalimbaAudio.whenRunning(function () {
+        if (gen !== state.playGeneration) return;
+        if (!state.playing || state.paused) return;
+        beginScheduleFromCurrent();
+      });
+    }
   }
 
   function pausePlay() {
     if (!state.playing) return;
+    state.playGeneration += 1;
     state.paused = true;
     state.playing = false;
     cancelVisualLoop();
-    // Advance noteIndex to next unplayed note for resume
     if (state.schedule && state.visualCursor < state.schedule.times.length) {
       state.noteIndex = state.schedule.times[state.visualCursor].index;
     } else if (state.schedule && state.visualCursor >= state.schedule.times.length) {
@@ -338,9 +364,18 @@
   }
 
   function updateTransportUI() {
-    $("btnPlay").disabled = state.playing && !state.paused;
-    $("btnPause").disabled = !state.playing || state.paused;
-    $("btnStop").disabled = !state.playing && !state.paused && state.noteIndex === 0;
+    var playDis = state.playing && !state.paused;
+    var pauseDis = !state.playing || state.paused;
+    var stopDis = !state.playing && !state.paused && state.noteIndex === 0;
+    $("btnPlay").disabled = playDis;
+    $("btnPause").disabled = pauseDis;
+    $("btnStop").disabled = stopDis;
+    var playNear = $("btnPlayNear");
+    var pauseNear = $("btnPauseNear");
+    var stopNear = $("btnStopNear");
+    if (playNear) playNear.disabled = playDis;
+    if (pauseNear) pauseNear.disabled = pauseDis;
+    if (stopNear) stopNear.disabled = stopDis;
     var navLock = state.playing && !state.paused;
     var prev = $("btnSecPrev");
     var next = $("btnSecNext");
@@ -380,11 +415,12 @@
 
   function bindUnlockGestures() {
     var unlock = function () {
-      window.KalimbaAudio.ensure();
+      window.KalimbaAudio.unlockSync();
     };
-    document.addEventListener("pointerdown", unlock, { passive: true });
-    document.addEventListener("touchstart", unlock, { passive: true });
-    document.addEventListener("click", unlock, { passive: true });
+    // Capture phase so unlock runs before other handlers lose the gesture.
+    document.addEventListener("pointerdown", unlock, { capture: true, passive: true });
+    document.addEventListener("touchstart", unlock, { capture: true, passive: true });
+    document.addEventListener("click", unlock, { capture: true, passive: true });
   }
 
   function bind() {
@@ -395,18 +431,26 @@
       renderScore();
       $("statusLine").innerHTML = "狀態：<strong>已選曲</strong>　《" + currentSong().title + "》　可按播放或點琴鍵練習";
     });
-    $("btnPlay").addEventListener("click", function () {
-      if (state.paused) {
-        startPlay();
-      } else {
-        startPlay();
-      }
-    });
-    $("btnPause").addEventListener("click", pausePlay);
-    $("btnStop").addEventListener("click", function () {
+    function onStopClick() {
       stopPlayback(true);
       $("statusLine").innerHTML = "狀態：<strong>已停止</strong>";
+    }
+    $("btnPlay").addEventListener("click", function () {
+      startPlay();
     });
+    $("btnPause").addEventListener("click", pausePlay);
+    $("btnStop").addEventListener("click", onStopClick);
+    if ($("btnPlayNear")) {
+      $("btnPlayNear").addEventListener("click", function () {
+        startPlay();
+      });
+    }
+    if ($("btnPauseNear")) {
+      $("btnPauseNear").addEventListener("click", pausePlay);
+    }
+    if ($("btnStopNear")) {
+      $("btnStopNear").addEventListener("click", onStopClick);
+    }
     $("btnMute").addEventListener("click", function () {
       setMuted(!state.muted);
     });
@@ -416,7 +460,6 @@
     $("tempo").addEventListener("input", function () {
       state.bpm = parseInt(this.value, 10);
       $("tempoVal").textContent = String(state.bpm);
-      // If playing, restart schedule from current visual note for new tempo
       if (state.playing && !state.paused) {
         if (state.schedule && state.visualCursor < state.schedule.times.length) {
           state.noteIndex = state.schedule.times[state.visualCursor].index;
