@@ -36,6 +36,8 @@
   --tile-chairs: #9155D9;
   /* 3D software hub — yellow plate baked into card_3d-software.png */
   --tile-3dsoftware: #E3C360;
+  /* Kalimba — same warm orange as production / prompt cards; sits between purple chairs and pink student-works */
+  --tile-kalimba: #EB9F54;
 
   /* CTA (hero button — coral energy like reference) */
   --cta: #E85A4F;
@@ -78,6 +80,7 @@
 .tile-3dsoon { background: var(--tile-3dsoon); }
 .tile-chairs { background: var(--tile-chairs); }
 .tile-3dsoftware { background: var(--tile-3dsoftware); }
+.tile-kalimba { background: var(--tile-kalimba); }
 
 .card-tile {
   border-radius: var(--radius-lg);
