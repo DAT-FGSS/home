@@ -40,6 +40,8 @@
   --tile-kalimba: #EB9F54;
   /* Activities — blue candy plate matching card_tech-art-show.png */
   --tile-activity: #5B7DB1;
+  /* Section view — warm brown plate baked into card_section-view.png */
+  --tile-section: #A67C52;
 
   /* CTA (hero button — coral energy like reference) */
   --cta: #E85A4F;
@@ -84,6 +86,7 @@
 .tile-3dsoftware { background: var(--tile-3dsoftware); }
 .tile-kalimba { background: var(--tile-kalimba); }
 .tile-activity { background: var(--tile-activity); }
+.tile-section { background: var(--tile-section); }
 
 .card-tile {
   border-radius: var(--radius-lg);
