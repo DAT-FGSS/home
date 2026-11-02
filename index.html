@@ -283,15 +283,13 @@
     .footer-note {
       font-size: var(--fs-small);
       line-height: 1.55;
-      text-align: right;
+      text-align: left;
       min-width: 0;
       max-width: 100%;
     }
     .footer-note p { margin: 0.15rem 0; }
-    .footer-contact { font-weight: 700; }
-    .footer-contact-mail,
-    .footer-who { display: inline-block; white-space: nowrap; }
-    .footer-meta { opacity: 0.85; font-weight: 400; }
+    .footer-contact,
+    .footer-who { font-weight: 700; white-space: nowrap; }
     .footer-mail { color: #fff; text-decoration: underline; text-underline-offset: 2px; }
     .footer-mail:hover { opacity: 0.9; }
 
@@ -311,7 +309,6 @@
       }
       .nav-toggle { display: inline-block; }
       .hero { max-height: none; aspect-ratio: 16/10; }
-      .footer-note { text-align: left; }
     }
     @media (max-width: 560px) {
       .grid { grid-template-columns: 1fr; }
@@ -541,10 +538,8 @@
         </div>
       </div>
       <div class="footer-note">
-        <p class="footer-contact">
-          <span class="footer-contact-mail">聯絡：<a class="footer-mail" href="mailto:cnh@fgss.edu.hk">cnh@fgss.edu.hk</a></span>　<span class="footer-who">DT/DAT科主任，CHING NGAI HUNG</span>
-        </p>
-        <p class="footer-meta">粉嶺官立中學 DAT · 教學材料已上線</p>
+        <p class="footer-contact">聯絡：<a class="footer-mail" href="mailto:cnh@fgss.edu.hk">cnh@fgss.edu.hk</a></p>
+        <p class="footer-who">DT/DAT科主任 CHING NGAI HUNG</p>
       </div>
     </div>
   </footer>
