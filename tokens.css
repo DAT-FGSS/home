@@ -34,6 +34,8 @@
   --tile-3dsoon: #56AB68;
   /* Designer-chairs plate — same purple as the product candy tile */
   --tile-chairs: #9155D9;
+  /* Gear generator — same purple frame as designer-chairs */
+  --tile-gear-gen: #9155D9;
   /* 3D software hub — yellow plate baked into card_3d-software.png */
   --tile-3dsoftware: #E3C360;
   /* Kalimba — same warm orange as production / prompt cards; sits between purple chairs and pink student-works */
@@ -83,6 +85,7 @@
 .tile-esp32 { background: var(--tile-esp32); }
 .tile-3dsoon { background: var(--tile-3dsoon); }
 .tile-chairs { background: var(--tile-chairs); }
+.tile-gear-gen { background: var(--tile-gear-gen); }
 .tile-3dsoftware { background: var(--tile-3dsoftware); }
 .tile-kalimba { background: var(--tile-kalimba); }
 .tile-activity { background: var(--tile-activity); }
